@@ -1,1 +1,523 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بونات مياه شرم الشيخ</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Cairo',sans-serif;direction:rtl;background:#f0f4f8;min-height:100vh;display:flex;flex-direction:column;}
 
+/* ===== CONFIG ===== */
+:root{
+  --blue:#004a99;
+  --blue2:#003f7f;
+  --light-blue:#e6f1fb;
+  --gold:#f0c040;
+  --white:#fff;
+  --gray:#f5f7fa;
+  --border:#dce8f5;
+  --text:#222;
+  --muted:#666;
+}
+
+/* ===== SPLASH ===== */
+#splash{
+  position:fixed;inset:0;background:linear-gradient(135deg,#003f7f,#005baa,#0073d1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:9999;transition:opacity .5s;
+}
+.splash-logo{width:140px;height:140px;border-radius:50%;border:3px solid rgba(255,255,255,0.3);
+  background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+.splash-logo img{width:130px;height:130px;border-radius:50%;object-fit:cover;}
+.splash-title{color:#fff;font-size:20px;font-weight:900;text-align:center;line-height:1.7;margin-bottom:8px;}
+.splash-sub{color:rgba(255,255,255,0.8);font-size:13px;text-align:center;}
+.splash-bar{width:200px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;margin-top:24px;overflow:hidden;}
+.splash-bar-inner{height:100%;width:0;background:#4fc3f7;border-radius:2px;animation:load 2.5s ease-out forwards;}
+@keyframes load{to{width:100%;}}
+.splash-powered{position:absolute;bottom:16px;right:20px;color:rgba(255,255,255,0.5);font-size:11px;direction:ltr;}
+
+/* ===== LOGIN ===== */
+#loginPage{
+  display:none;min-height:100vh;background:linear-gradient(135deg,#003f7f,#005baa);
+  align-items:center;justify-content:center;flex-direction:column;
+}
+.login-box{background:#fff;border-radius:16px;padding:36px 32px;width:360px;max-width:95vw;}
+.login-logo{text-align:center;margin-bottom:20px;}
+.login-logo img{width:80px;height:80px;border-radius:50%;object-fit:cover;}
+.login-title{font-size:16px;font-weight:700;color:var(--blue2);text-align:center;margin-bottom:20px;}
+.login-group{margin-bottom:14px;}
+.login-group label{font-size:13px;font-weight:600;color:#333;display:block;margin-bottom:5px;}
+.login-group input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'Cairo',sans-serif;font-size:13px;outline:none;}
+.login-group input:focus{border-color:var(--blue);}
+.login-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;}
+.login-btn:hover{background:var(--blue2);}
+.login-forgot{text-align:center;margin-top:12px;font-size:12px;color:var(--blue);cursor:pointer;text-decoration:underline;}
+.login-err{background:#fee;color:#c00;border-radius:8px;padding:8px 12px;font-size:12px;text-align:center;margin-top:8px;display:none;}
+.login-powered{color:rgba(255,255,255,0.5);font-size:11px;margin-top:16px;direction:ltr;}
+
+/* ===== FORGOT ===== */
+#forgotPage{
+  display:none;min-height:100vh;background:linear-gradient(135deg,#003f7f,#005baa);
+  align-items:center;justify-content:center;flex-direction:column;
+}
+
+/* ===== APP ===== */
+#appPage{display:none;flex-direction:column;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{background:var(--blue);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-logo{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.3);}
+.topbar-appname{color:#fff;font-size:13px;font-weight:700;}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.topbar-welcome{color:#cce4ff;font-size:12px;}
+.topbar-username{color:#fff;font-size:13px;font-weight:700;}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:#4fc3f7;display:flex;align-items:center;justify-content:center;color:#003f7f;font-size:12px;font-weight:700;cursor:pointer;}
+.notif-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;position:relative;}
+.notif-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;background:#ff5252;border-radius:50%;}
+.logout-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;padding:5px 12px;border-radius:6px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer;}
+
+/* NOTIFICATION BAR */
+.notif-bar{background:#fff3cd;border-bottom:1px solid #ffc107;padding:6px 20px;font-size:12px;color:#856404;display:none;align-items:center;justify-content:space-between;}
+.notif-bar span{flex:1;}
+.notif-bar button{background:none;border:none;cursor:pointer;color:#856404;font-size:14px;}
+
+/* SIDEBAR */
+.app-body{display:flex;flex:1;}
+.sidebar{width:220px;background:#fff;border-left:1px solid var(--border);padding:12px 0;display:flex;flex-direction:column;}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:13px;color:var(--text);border-right:3px solid transparent;transition:all .2s;}
+.sidebar-item:hover{background:var(--light-blue);color:var(--blue);}
+.sidebar-item.active{background:var(--light-blue);color:var(--blue);border-right-color:var(--blue);font-weight:700;}
+.sidebar-icon{font-size:16px;width:20px;text-align:center;}
+.sidebar-sep{height:1px;background:var(--border);margin:8px 0;}
+
+/* MAIN CONTENT */
+.main-content{flex:1;padding:20px;overflow-y:auto;}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.page-title{font-size:18px;font-weight:700;color:var(--blue2);}
+.help-btn{background:var(--light-blue);border:1px solid var(--border);color:var(--blue);padding:5px 12px;border-radius:6px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px;}
+
+/* CARDS */
+.home-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:500px;margin:40px auto;}
+.home-card{background:#fff;border-radius:16px;border:1.5px solid var(--border);padding:36px 24px;display:flex;flex-direction:column;align-items:center;gap:14px;cursor:pointer;transition:all .2s;}
+.home-card:hover{border-color:var(--blue);transform:translateY(-3px);}
+.home-card-icon{width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;}
+.home-card-label{font-size:17px;font-weight:700;color:var(--blue2);}
+.home-card-desc{font-size:12px;color:var(--muted);text-align:center;}
+
+/* FOOTER */
+.footer{background:#fff;border-top:1px solid var(--border);padding:10px 20px;text-align:left;font-size:11px;color:var(--muted);direction:ltr;}
+
+/* HELP MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;display:none;align-items:center;justify-content:center;}
+.modal-box{background:#fff;border-radius:16px;padding:24px;max-width:420px;width:90%;direction:rtl;}
+.modal-title{font-size:15px;font-weight:700;color:var(--blue2);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.modal-body{font-size:13px;color:#333;line-height:1.8;}
+.modal-close{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 20px;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer;margin-top:16px;display:block;width:100%;}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">
+    <img src="assets/logo.jpg" onerror="this.src=''" alt="لوجو">
+  </div>
+  <div class="splash-title">برنامج بونات<br>شركة مياه الشرب والصرف الصحي<br>قطاع جنوب سيناء - منطقة شرم الشيخ</div>
+  <div class="splash-sub">نظام إدارة البونات المائية</div>
+  <div class="splash-bar"><div class="splash-bar-inner"></div></div>
+  <div class="splash-powered">Powered By : Eng.Ahmed Ezz Oshalla</div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginPage" style="display:none;min-height:100vh;background:linear-gradient(135deg,#003f7f,#005baa);align-items:center;justify-content:center;flex-direction:column;">
+  <div class="login-box">
+    <div class="login-logo"><img src="assets/logo.jpg" onerror="this.style.display='none'" alt="لوجو"></div>
+    <div class="login-title">تسجيل الدخول<br><small style="font-size:11px;color:#888;">بونات مياه شرم الشيخ</small></div>
+    <div class="login-group">
+      <label>اسم المستخدم</label>
+      <input type="text" id="loginUser" placeholder="username">
+    </div>
+    <div class="login-group">
+      <label>كلمة المرور</label>
+      <input type="password" id="loginPass" placeholder="password">
+    </div>
+    <button class="login-btn" onclick="doLogin()">دخول</button>
+    <div class="login-err" id="loginErr">اسم المستخدم أو كلمة المرور غلط</div>
+    <div class="login-forgot" onclick="showForgot()">نسيت كلمة المرور؟</div>
+  </div>
+  <div class="login-powered">Powered By : Eng.Ahmed Ezz Oshalla</div>
+</div>
+
+<!-- FORGOT PASSWORD -->
+<div id="forgotPage" style="display:none;min-height:100vh;background:linear-gradient(135deg,#003f7f,#005baa);align-items:center;justify-content:center;flex-direction:column;">
+  <div class="login-box">
+    <div class="login-title">استعادة كلمة المرور</div>
+    <div class="login-group">
+      <label>رقم الموبايل</label>
+      <input type="text" id="forgotPhone" placeholder="01xxxxxxxxx">
+    </div>
+    <div class="login-group">
+      <label>البريد الإلكتروني</label>
+      <input type="email" id="forgotEmail" placeholder="example@email.com">
+    </div>
+    <button class="login-btn" onclick="doForgot()">إرسال كلمة مرور جديدة</button>
+    <div class="login-err" id="forgotErr"></div>
+    <div class="login-forgot" onclick="showLogin()">← رجوع لتسجيل الدخول</div>
+  </div>
+  <div class="login-powered">Powered By : Eng.Ahmed Ezz Oshalla</div>
+</div>
+
+<!-- APP -->
+<div id="appPage" style="display:none;flex-direction:column;min-height:100vh;">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-right">
+      <img class="topbar-logo" src="assets/logo.jpg" onerror="this.style.display='none'" alt="لوجو">
+      <span class="topbar-appname">بونات مياه شرم الشيخ</span>
+    </div>
+    <div class="topbar-left">
+      <span class="topbar-welcome">مرحباً،</span>
+      <span class="topbar-username" id="topbarName"></span>
+      <button class="notif-btn" onclick="toggleNotif()" title="الإشعارات">
+        🔔<span class="notif-dot" id="notifDot"></span>
+      </button>
+      <button class="logout-btn" onclick="doLogout()">خروج</button>
+      <div class="topbar-avatar" id="topbarAvatar"></div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATION BAR -->
+  <div class="notif-bar" id="notifBar">
+    <span id="notifText"></span>
+    <button onclick="closeNotif()">✕</button>
+  </div>
+
+  <!-- BODY -->
+  <div class="app-body">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-item active" onclick="showSection('home')" id="nav-home">
+        <span class="sidebar-icon">🏠</span> الرئيسية
+      </div>
+      <div class="sidebar-item" onclick="showSection('bons')" id="nav-bons">
+        <span class="sidebar-icon">📋</span> البونات
+      </div>
+      <div class="sidebar-item" onclick="showSection('reports')" id="nav-reports">
+        <span class="sidebar-icon">📊</span> التقارير
+      </div>
+      <div class="sidebar-item" onclick="showSection('requests')" id="nav-requests">
+        <span class="sidebar-icon">📨</span> طلبات الكمية
+      </div>
+      <div class="sidebar-item" onclick="showSection('chat')" id="nav-chat">
+        <span class="sidebar-icon">💬</span> المحادثة
+      </div>
+      <div class="sidebar-sep"></div>
+      <div class="sidebar-item" onclick="showSection('users')" id="nav-users">
+        <span class="sidebar-icon">👥</span> المستخدمين
+      </div>
+      <div class="sidebar-item" onclick="showSection('adduser')" id="nav-adduser">
+        <span class="sidebar-icon">➕</span> إضافة مستخدم
+      </div>
+      <div class="sidebar-item" onclick="showSection('logs')" id="nav-logs">
+        <span class="sidebar-icon">📜</span> السجلات
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content" id="mainContent">
+
+      <!-- HOME -->
+      <div id="sec-home">
+        <div class="page-header">
+          <div class="page-title">الصفحة الرئيسية</div>
+          <button class="help-btn" onclick="showHelp('home')">❓ مساعدة</button>
+        </div>
+        <div class="home-cards">
+          <div class="home-card" onclick="showSection('bons')">
+            <div class="home-card-icon" style="background:#e6f1fb;">📋</div>
+            <div class="home-card-label">البونات</div>
+            <div class="home-card-desc">إنشاء وطباعة بونات المياه</div>
+          </div>
+          <div class="home-card" onclick="showSection('reports')">
+            <div class="home-card-icon" style="background:#e1f5ee;">📊</div>
+            <div class="home-card-label">التقارير</div>
+            <div class="home-card-desc">عرض وتصدير التقارير</div>
+          </div>
+          <div class="home-card" onclick="showSection('requests')">
+            <div class="home-card-icon" style="background:#fff3e0;">📨</div>
+            <div class="home-card-label">طلبات الكمية</div>
+            <div class="home-card-desc">طلب والموافقة على الكميات</div>
+          </div>
+          <div class="home-card" onclick="showSection('chat')">
+            <div class="home-card-icon" style="background:#f3e5f5;">💬</div>
+            <div class="home-card-label">المحادثة</div>
+            <div class="home-card-desc">التواصل مع المستخدمين</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BONS -->
+      <div id="sec-bons" style="display:none;">
+        <div class="page-header">
+          <div class="page-title">إنشاء بون جديد</div>
+          <button class="help-btn" onclick="showHelp('bons')">❓ مساعدة</button>
+        </div>
+        <p style="color:#888;font-size:13px;">قريباً - شاشة إنشاء البون</p>
+      </div>
+
+      <!-- REPORTS -->
+      <div id="sec-reports" style="display:none;">
+        <div class="page-header">
+          <div class="page-title">التقارير</div>
+          <button class="help-btn" onclick="showHelp('reports')">❓ مساعدة</button>
+        </div>
+        <p style="color:#888;font-size:13px;">قريباً - شاشة التقارير</p>
+      </div>
+
+      <!-- REQUESTS -->
+      <div id="sec-requests" style="display:none;">
+        <div class="page-header">
+          <div class="page-title">طلبات الكمية</div>
+          <button class="help-btn" onclick="showHelp('requests')">❓ مساعدة</button>
+        </div>
+        <p style="color:#888;font-size:13px;">قريباً - شاشة الطلبات</p>
+      </div>
+
+      <!-- CHAT -->
+      <div id="sec-chat" style="display:none;">
+        <div class="page-header">
+          <div class="page-title">المحادثة</div>
+          <button class="help-btn" onclick="showHelp('chat')">❓ مساعدة</button>
+        </div>
+        <p style="color:#888;font-size:13px;">قريباً - شاشة المحادثة</p>
+      </div>
+
+      <!-- USERS -->
+      <div id="sec-users" style="display:none;">
+        <div class="page-header">
+          <div class="page-title">المستخدمين</div>
+          <button class="help-btn" onclick="showHelp('users')">❓ مساعدة</button>
+        </div>
+        <p style="color:#888;font-size:13px;">قريباً - قائمة المستخدمين</p>
+      </div>
+
+      <!-- ADD USER -->
+      <div id="sec-adduser" style="display:none;">
+        <div class="page-header">
+          <div class="page-title">إضافة مستخدم</div>
+          <button class="help-btn" onclick="showHelp('adduser')">❓ مساعدة</button>
+        </div>
+        <p style="color:#888;font-size:13px;">قريباً - إضافة مستخدم جديد</p>
+      </div>
+
+      <!-- LOGS -->
+      <div id="sec-logs" style="display:none;">
+        <div class="page-header">
+          <div class="page-title">السجلات</div>
+          <button class="help-btn" onclick="showHelp('logs')">❓ مساعدة</button>
+        </div>
+        <p style="color:#888;font-size:13px;">قريباً - سجل العمليات</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">Powered By : Eng.Ahmed Ezz Oshalla</div>
+</div>
+
+<!-- HELP MODAL -->
+<div class="modal-overlay" id="helpModal" onclick="closeHelp()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-title">❓ <span id="helpTitle"></span></div>
+    <div class="modal-body" id="helpBody"></div>
+    <button class="modal-close" onclick="closeHelp()">حسناً</button>
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbyjWw6QQQiJ6x-luPYPToJtGnpgHwrZop98JkcK11W0ZUQglwd2A3_Qs6-SPZZEX_dI/exec';
+
+let currentUser = null;
+
+const HELP = {
+  home: {title:'الصفحة الرئيسية', body:'هذه الصفحة الرئيسية للبرنامج. يمكنك من هنا الوصول لجميع أقسام البرنامج: البونات، التقارير، طلبات الكمية، والمحادثة.'},
+  bons: {title:'البونات', body:'من هنا يمكنك إنشاء بونات مياه جديدة وطباعتها. أدخل الكمية واختر الجهة ونوع النقل ثم اضغط معاينة وطباعة.'},
+  reports: {title:'التقارير', body:'من هنا يمكنك عرض تقارير البونات. يمكن الفلترة بالتاريخ أو الجهة أو الكل.'},
+  requests: {title:'طلبات الكمية', body:'من هنا يمكنك تقديم طلب كمية مياه أو الموافقة على الطلبات المقدمة حسب صلاحياتك.'},
+  chat: {title:'المحادثة', body:'من هنا يمكن لجميع المستخدمين التواصل مع بعض في محادثة جماعية.'},
+  users: {title:'المستخدمين', body:'من هنا يمكنك عرض قائمة المستخدمين وبياناتهم.'},
+  adduser: {title:'إضافة مستخدم', body:'من هنا يمكنك إضافة مستخدم جديد وتحديد اسمه وصلاحياته.'},
+  logs: {title:'السجلات', body:'من هنا يمكنك عرض كل العمليات التي تمت في البرنامج مع التوقيت واسم المستخدم.'}
+};
+
+// SPLASH
+window.onload = function() {
+  setTimeout(() => {
+    document.getElementById('splash').style.opacity = '0';
+    setTimeout(() => {
+      document.getElementById('splash').style.display = 'none';
+      showLogin();
+    }, 500);
+  }, 2800);
+};
+
+function showLogin() {
+  hide('forgotPage');
+  const lp = document.getElementById('loginPage');
+  lp.style.display = 'flex';
+}
+
+function showForgot() {
+  hide('loginPage');
+  const fp = document.getElementById('forgotPage');
+  fp.style.display = 'flex';
+}
+
+async function doLogin() {
+  const username = document.getElementById('loginUser').value.trim();
+  const password = document.getElementById('loginPass').value.trim();
+  if (!username || !password) return;
+
+  try {
+    const res = await fetch(API, {
+      method:'POST',
+      body: JSON.stringify({action:'login', username, password})
+    });
+    const data = await res.json();
+    if (data.success) {
+      currentUser = data.user;
+      startApp();
+    } else {
+      const err = document.getElementById('loginErr');
+      err.style.display = 'block';
+      err.textContent = data.msg === 'banned' ? 'هذا الحساب محظور' : 'اسم المستخدم أو كلمة المرور غلط';
+    }
+  } catch(e) {
+    alert('خطأ في الاتصال، تأكد من الإنترنت');
+  }
+}
+
+async function doForgot() {
+  const phone = document.getElementById('forgotPhone').value.trim();
+  const email = document.getElementById('forgotEmail').value.trim();
+  const err = document.getElementById('forgotErr');
+  if (!phone || !email) { err.style.display='block'; err.textContent='أدخل رقم الموبايل والإيميل'; return; }
+
+  try {
+    const res = await fetch(API, {
+      method:'POST',
+      body: JSON.stringify({action:'resetPassword', phone, email})
+    });
+    const data = await res.json();
+    err.style.display = 'block';
+    if (data.success) {
+      err.style.background = '#d4edda';
+      err.style.color = '#155724';
+      err.textContent = 'تم إرسال كلمة مرور جديدة على إيميلك';
+    } else {
+      err.textContent = 'لم يتم العثور على حساب بهذه البيانات';
+    }
+  } catch(e) { err.style.display='block'; err.textContent='خطأ في الاتصال'; }
+}
+
+function startApp() {
+  hide('loginPage');
+  hide('forgotPage');
+  const app = document.getElementById('appPage');
+  app.style.display = 'flex';
+
+  // Welcome
+  const initials = currentUser.fullname ? currentUser.fullname.split(' ').map(w=>w[0]).join('').substring(0,2) : currentUser.username.substring(0,2);
+  document.getElementById('topbarName').textContent = currentUser.fullname || currentUser.username;
+  document.getElementById('topbarAvatar').textContent = initials;
+
+  // Notification
+  showNotifBar(`مرحباً ${currentUser.fullname || currentUser.username} — دخلت الساعة ${new Date().toLocaleTimeString('ar-EG')}`);
+
+  // Sidebar permissions
+  setupSidebar();
+
+  // Log
+  callAPI({action:'addLog', user:currentUser.username, action_:'login', details:'تسجيل دخول'});
+}
+
+function setupSidebar() {
+  const role = currentUser.role;
+  const perms = (currentUser.permissions || '').split(',');
+
+  // hide adduser for non-admin/superadmin
+  if (!['admin','superadmin'].includes(role)) {
+    document.getElementById('nav-adduser').style.display = 'none';
+  }
+  if (!['admin','superadmin'].includes(role)) {
+    document.getElementById('nav-logs').style.display = 'none';
+  }
+  if (!perms.includes('view_reports') && !['admin','superadmin'].includes(role)) {
+    document.getElementById('nav-reports').style.display = 'none';
+  }
+  if (!perms.includes('add_bons') && !['admin','superadmin'].includes(role)) {
+    document.getElementById('nav-bons').style.display = 'none';
+  }
+  if (!perms.includes('request_qty') && !['admin','superadmin'].includes(role)) {
+    document.getElementById('nav-requests').style.display = 'none';
+  }
+}
+
+function showNotifBar(msg) {
+  const bar = document.getElementById('notifBar');
+  document.getElementById('notifText').textContent = msg;
+  bar.style.display = 'flex';
+}
+
+function closeNotif() { document.getElementById('notifBar').style.display = 'none'; }
+function toggleNotif() {
+  const bar = document.getElementById('notifBar');
+  bar.style.display = bar.style.display === 'none' ? 'flex' : 'none';
+}
+
+function doLogout() {
+  callAPI({action:'addLog', user:currentUser.username, action_:'logout', details:'تسجيل خروج'});
+  currentUser = null;
+  document.getElementById('appPage').style.display = 'none';
+  showLogin();
+}
+
+function showSection(name) {
+  const secs = ['home','bons','reports','requests','chat','users','adduser','logs'];
+  secs.forEach(s => { document.getElementById('sec-'+s).style.display = s===name?'block':'none'; });
+  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+  const nav = document.getElementById('nav-'+name);
+  if (nav) nav.classList.add('active');
+}
+
+function showHelp(page) {
+  const h = HELP[page] || {title:'مساعدة', body:'لا توجد معلومات لهذه الصفحة.'};
+  document.getElementById('helpTitle').textContent = h.title;
+  document.getElementById('helpBody').textContent = h.body;
+  document.getElementById('helpModal').style.display = 'flex';
+}
+function closeHelp() { document.getElementById('helpModal').style.display = 'none'; }
+
+function hide(id) { document.getElementById(id).style.display = 'none'; }
+
+async function callAPI(data) {
+  try {
+    await fetch(API, {method:'POST', body: JSON.stringify(data)});
+  } catch(e) {}
+}
+
+// Enter key login
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.getElementById('loginPage').style.display !== 'none') doLogin();
+    if (document.getElementById('forgotPage').style.display !== 'none') doForgot();
+  }
+});
+</script>
+</body>
+</html>
