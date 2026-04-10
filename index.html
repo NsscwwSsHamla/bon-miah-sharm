@@ -3,233 +3,332 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>بونات مياه شرم الشيخ</title>
+<title>منظومة إدارة بونات منطقة شرم الشيخ</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Cairo',sans-serif;direction:rtl;background:#f0f4f8;min-height:100vh;display:flex;flex-direction:column;}
-
-/* ===== CONFIG ===== */
+body{font-family:'Cairo',sans-serif;direction:rtl;background:#f0f4f8;min-height:100vh;}
 :root{
-  --blue:#004a99;
-  --blue2:#003f7f;
-  --light-blue:#e6f1fb;
-  --gold:#f0c040;
-  --white:#fff;
-  --gray:#f5f7fa;
-  --border:#dce8f5;
-  --text:#222;
-  --muted:#666;
+  --blue:#004a99;--blue2:#003f7f;--light-blue:#e6f1fb;
+  --white:#fff;--gray:#f5f7fa;--border:#dce8f5;
+  --text:#222;--muted:#666;--green:#0F6E56;--red:#c00;
 }
 
-/* ===== SPLASH ===== */
-#splash{
-  position:fixed;inset:0;background:linear-gradient(135deg,#003f7f,#005baa,#0073d1);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  z-index:9999;transition:opacity .5s;
-}
-.splash-logo{width:140px;height:140px;border-radius:50%;border:3px solid rgba(255,255,255,0.3);
-  background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
-.splash-logo img{width:130px;height:130px;border-radius:50%;object-fit:cover;}
-.splash-title{color:#fff;font-size:20px;font-weight:900;text-align:center;line-height:1.7;margin-bottom:8px;}
-.splash-sub{color:rgba(255,255,255,0.8);font-size:13px;text-align:center;}
-.splash-bar{width:200px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;margin-top:24px;overflow:hidden;}
-.splash-bar-inner{height:100%;width:0;background:#4fc3f7;border-radius:2px;animation:load 2.5s ease-out forwards;}
-@keyframes load{to{width:100%;}}
-.splash-powered{position:absolute;bottom:16px;right:20px;color:rgba(255,255,255,0.5);font-size:11px;direction:ltr;}
+/* SPLASH */
+#splash{position:fixed;inset:0;background:linear-gradient(135deg,#003f7f,#005baa,#0073d1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s;}
+.sp-logo{width:180px;height:180px;border-radius:50%;border:4px solid rgba(255,255,255,0.3);
+  background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:24px;}
+.sp-logo img{width:168px;height:168px;border-radius:50%;object-fit:cover;}
+.sp-title{color:#fff;font-size:22px;font-weight:900;text-align:center;line-height:1.8;margin-bottom:8px;}
+.sp-sub{color:rgba(255,255,255,0.85);font-size:15px;font-weight:600;text-align:center;}
+.sp-bar{width:220px;height:5px;background:rgba(255,255,255,0.2);border-radius:3px;margin-top:28px;overflow:hidden;}
+.sp-bar-in{height:100%;width:0;background:#4fc3f7;border-radius:3px;animation:ld 2.8s ease-out forwards;}
+@keyframes ld{to{width:100%;}}
+.sp-pow{position:absolute;bottom:20px;right:24px;color:rgba(255,255,255,0.6);font-size:13px;font-weight:600;direction:ltr;letter-spacing:.5px;}
 
-/* ===== LOGIN ===== */
-#loginPage{
-  display:none;min-height:100vh;background:linear-gradient(135deg,#003f7f,#005baa);
-  align-items:center;justify-content:center;flex-direction:column;
-}
-.login-box{background:#fff;border-radius:16px;padding:36px 32px;width:360px;max-width:95vw;}
-.login-logo{text-align:center;margin-bottom:20px;}
-.login-logo img{width:80px;height:80px;border-radius:50%;object-fit:cover;}
-.login-title{font-size:16px;font-weight:700;color:var(--blue2);text-align:center;margin-bottom:20px;}
-.login-group{margin-bottom:14px;}
-.login-group label{font-size:13px;font-weight:600;color:#333;display:block;margin-bottom:5px;}
-.login-group input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'Cairo',sans-serif;font-size:13px;outline:none;}
-.login-group input:focus{border-color:var(--blue);}
-.login-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;}
+/* LOGIN */
+#loginPage{display:none;min-height:100vh;background:linear-gradient(135deg,#003f7f,#005baa);
+  align-items:center;justify-content:center;flex-direction:column;}
+.login-box{background:#fff;border-radius:18px;padding:40px 36px;width:380px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,0.18);}
+.login-logo{text-align:center;margin-bottom:16px;}
+.login-logo img{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid var(--light-blue);}
+.login-title{font-size:17px;font-weight:700;color:var(--blue2);text-align:center;margin-bottom:6px;}
+.login-subtitle{font-size:12px;color:var(--muted);text-align:center;margin-bottom:20px;}
+.form-group{margin-bottom:14px;}
+.form-group label{font-size:14px;font-weight:600;color:#333;display:block;margin-bottom:5px;}
+.form-group input{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;
+  font-family:'Cairo',sans-serif;font-size:14px;outline:none;transition:border .2s;}
+.form-group input:focus{border-color:var(--blue);}
+.remember{display:flex;align-items:center;gap:8px;font-size:13px;color:#555;margin-bottom:4px;}
+.remember input{width:auto;}
+.login-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;
+  padding:13px;font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:background .2s;}
 .login-btn:hover{background:var(--blue2);}
-.login-forgot{text-align:center;margin-top:12px;font-size:12px;color:var(--blue);cursor:pointer;text-decoration:underline;}
-.login-err{background:#fee;color:#c00;border-radius:8px;padding:8px 12px;font-size:12px;text-align:center;margin-top:8px;display:none;}
-.login-powered{color:rgba(255,255,255,0.5);font-size:11px;margin-top:16px;direction:ltr;}
-
-/* ===== FORGOT ===== */
-#forgotPage{
-  display:none;min-height:100vh;background:linear-gradient(135deg,#003f7f,#005baa);
-  align-items:center;justify-content:center;flex-direction:column;
-}
-
-/* ===== APP ===== */
-#appPage{display:none;flex-direction:column;min-height:100vh;}
+.login-forgot{text-align:center;margin-top:14px;font-size:13px;color:var(--blue);cursor:pointer;text-decoration:underline;}
+.login-err{background:#fee2e2;color:#c00;border-radius:8px;padding:9px 12px;font-size:13px;text-align:center;margin-top:10px;display:none;}
+.login-pow{color:rgba(255,255,255,0.55);font-size:12px;margin-top:18px;direction:ltr;font-weight:600;}
 
 /* TOPBAR */
-.topbar{background:var(--blue);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.topbar-right{display:flex;align-items:center;gap:12px;}
-.topbar-logo{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.3);}
-.topbar-appname{color:#fff;font-size:13px;font-weight:700;}
-.topbar-left{display:flex;align-items:center;gap:10px;}
-.topbar-welcome{color:#cce4ff;font-size:12px;}
-.topbar-username{color:#fff;font-size:13px;font-weight:700;}
-.topbar-avatar{width:32px;height:32px;border-radius:50%;background:#4fc3f7;display:flex;align-items:center;justify-content:center;color:#003f7f;font-size:12px;font-weight:700;cursor:pointer;}
-.notif-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;position:relative;}
-.notif-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;background:#ff5252;border-radius:50%;}
-.logout-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;padding:5px 12px;border-radius:6px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer;}
+#appPage{display:none;flex-direction:column;min-height:100vh;}
+.topbar{background:var(--blue);padding:0 20px;height:60px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
+.tb-right{display:flex;align-items:center;gap:12px;}
+.tb-logo{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.35);}
+.tb-name{color:#fff;font-size:14px;font-weight:700;}
+.tb-left{display:flex;align-items:center;gap:10px;}
+.tb-welcome{color:#cce4ff;font-size:13px;}
+.tb-user{color:#fff;font-size:14px;font-weight:700;}
+.tb-avatar{width:34px;height:34px;border-radius:50%;background:#4fc3f7;display:flex;align-items:center;
+  justify-content:center;color:#003f7f;font-size:13px;font-weight:700;}
+.tb-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;padding:6px 14px;
+  border-radius:7px;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer;}
+.tb-btn:hover{background:rgba(255,255,255,0.25);}
+.notif-wrap{position:relative;}
+.notif-ico{background:rgba(255,255,255,0.15);border:none;color:#fff;width:34px;height:34px;
+  border-radius:50%;cursor:pointer;font-size:16px;}
+.notif-dot{position:absolute;top:3px;right:3px;width:9px;height:9px;background:#ff5252;border-radius:50%;display:none;}
 
-/* NOTIFICATION BAR */
-.notif-bar{background:#fff3cd;border-bottom:1px solid #ffc107;padding:6px 20px;font-size:12px;color:#856404;display:none;align-items:center;justify-content:space-between;}
-.notif-bar span{flex:1;}
-.notif-bar button{background:none;border:none;cursor:pointer;color:#856404;font-size:14px;}
+/* NOTIF BAR */
+.notif-bar{background:#fff8e1;border-bottom:2px solid #ffc107;padding:8px 24px;font-size:13px;
+  font-weight:600;color:#7a5800;display:none;align-items:center;justify-content:space-between;}
+.notif-bar button{background:none;border:none;cursor:pointer;color:#7a5800;font-size:16px;font-weight:700;}
 
-/* SIDEBAR */
-.app-body{display:flex;flex:1;}
-.sidebar{width:220px;background:#fff;border-left:1px solid var(--border);padding:12px 0;display:flex;flex-direction:column;}
-.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:13px;color:var(--text);border-right:3px solid transparent;transition:all .2s;}
-.sidebar-item:hover{background:var(--light-blue);color:var(--blue);}
-.sidebar-item.active{background:var(--light-blue);color:var(--blue);border-right-color:var(--blue);font-weight:700;}
-.sidebar-icon{font-size:16px;width:20px;text-align:center;}
-.sidebar-sep{height:1px;background:var(--border);margin:8px 0;}
+/* LAYOUT */
+.app-body{display:flex;flex:1;min-height:calc(100vh - 100px);}
+.sidebar{width:230px;background:#fff;border-left:1px solid var(--border);padding:14px 0;
+  display:flex;flex-direction:column;box-shadow:2px 0 8px rgba(0,0,0,0.04);}
+.nav-item{display:flex;align-items:center;gap:10px;padding:12px 18px;cursor:pointer;
+  font-size:14px;color:var(--text);border-right:3px solid transparent;transition:all .2s;}
+.nav-item:hover{background:var(--light-blue);color:var(--blue);}
+.nav-item.active{background:var(--light-blue);color:var(--blue);border-right-color:var(--blue);font-weight:700;}
+.nav-icon{font-size:17px;width:22px;text-align:center;}
+.nav-sep{height:1px;background:var(--border);margin:8px 12px;}
+.nav-section{font-size:11px;color:var(--muted);padding:8px 18px 4px;font-weight:700;text-transform:uppercase;}
 
-/* MAIN CONTENT */
-.main-content{flex:1;padding:20px;overflow-y:auto;}
-.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.page-title{font-size:18px;font-weight:700;color:var(--blue2);}
-.help-btn{background:var(--light-blue);border:1px solid var(--border);color:var(--blue);padding:5px 12px;border-radius:6px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px;}
+/* MAIN */
+.main{flex:1;padding:24px;overflow-y:auto;}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;
+  padding-bottom:12px;border-bottom:2px solid var(--border);}
+.page-title{font-size:20px;font-weight:700;color:var(--blue2);}
+.help-btn{background:var(--light-blue);border:1.5px solid var(--border);color:var(--blue);
+  padding:6px 14px;border-radius:8px;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer;
+  display:flex;align-items:center;gap:5px;font-weight:600;}
 
-/* CARDS */
-.home-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:500px;margin:40px auto;}
-.home-card{background:#fff;border-radius:16px;border:1.5px solid var(--border);padding:36px 24px;display:flex;flex-direction:column;align-items:center;gap:14px;cursor:pointer;transition:all .2s;}
-.home-card:hover{border-color:var(--blue);transform:translateY(-3px);}
-.home-card-icon{width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;}
-.home-card-label{font-size:17px;font-weight:700;color:var(--blue2);}
-.home-card-desc{font-size:12px;color:var(--muted);text-align:center;}
+/* CARDS HOME */
+.home-cards{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:540px;margin:30px auto;}
+.home-card{background:#fff;border-radius:18px;border:2px solid var(--border);padding:38px 26px;
+  display:flex;flex-direction:column;align-items:center;gap:14px;cursor:pointer;transition:all .2s;}
+.home-card:hover{border-color:var(--blue);transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,74,153,0.12);}
+.hc-icon{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;}
+.hc-label{font-size:18px;font-weight:700;color:var(--blue2);}
+.hc-desc{font-size:12px;color:var(--muted);text-align:center;}
+
+/* BUTTONS */
+.btn{padding:10px 20px;border-radius:9px;border:none;font-family:'Cairo',sans-serif;
+  font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-primary{background:var(--blue);color:#fff;}
+.btn-primary:hover{background:var(--blue2);}
+.btn-success{background:#0F6E56;color:#fff;}
+.btn-danger{background:#c00;color:#fff;}
+.btn-outline{background:#fff;color:var(--blue);border:1.5px solid var(--blue);}
+.btn-sm{padding:6px 14px;font-size:13px;}
+
+/* FORM */
+.form-card{background:#fff;border-radius:14px;border:1.5px solid var(--border);padding:24px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-grid.full{grid-template-columns:1fr;}
+.fg{display:flex;flex-direction:column;gap:6px;}
+.fg.full{grid-column:1/-1;}
+.fg label{font-size:14px;font-weight:700;color:#333;}
+.fg input,.fg select,.fg textarea{border:1.5px solid var(--border);border-radius:9px;
+  padding:10px 14px;font-family:'Cairo',sans-serif;font-size:14px;outline:none;width:100%;}
+.fg input:focus,.fg select:focus{border-color:var(--blue);}
+.fg textarea{resize:vertical;min-height:80px;}
+.radio-group{display:flex;gap:12px;}
+.radio-card{flex:1;border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;
+  display:flex;align-items:center;gap:8px;cursor:pointer;transition:all .2s;font-size:14px;}
+.radio-card.selected{border-color:var(--blue);background:var(--light-blue);color:var(--blue);font-weight:700;}
+.mode-tabs{display:flex;gap:10px;margin-bottom:14px;}
+.mode-tab{flex:1;padding:9px;border:1.5px solid var(--border);border-radius:9px;background:#fff;
+  font-family:'Cairo',sans-serif;font-size:14px;font-weight:600;cursor:pointer;color:#555;transition:all .2s;}
+.mode-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.auto-result{background:var(--light-blue);border:1.5px solid #b5d4f4;border-radius:9px;
+  padding:11px 16px;font-size:13px;color:#0C447C;display:none;margin-top:10px;line-height:1.8;}
+.manual-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.manual-row input{flex:1;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;
+  font-family:'Cairo',sans-serif;font-size:13px;}
+.manual-row span{font-size:13px;color:#555;white-space:nowrap;}
+.add-row-btn{background:none;border:1.5px dashed var(--blue);color:var(--blue);border-radius:8px;
+  padding:7px 16px;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer;margin-top:4px;}
+.total-box{background:var(--blue2);color:#fff;border-radius:9px;padding:11px 18px;
+  font-size:15px;font-weight:700;text-align:center;margin-top:10px;}
+.action-bar{display:flex;gap:12px;margin-top:22px;padding-top:18px;border-top:1.5px solid var(--border);}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+th{background:var(--blue);color:#fff;padding:12px 14px;text-align:right;font-weight:700;}
+td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--text);}
+tr:hover td{background:#f8fbff;}
+.badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;}
+.badge-green{background:#d4edda;color:#155724;}
+.badge-blue{background:var(--light-blue);color:var(--blue2);}
+.badge-red{background:#fee2e2;color:#c00;}
+.badge-orange{background:#fff3cd;color:#856404;}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;
+  display:none;align-items:center;justify-content:center;}
+.modal-box{background:#fff;border-radius:18px;padding:28px;width:90%;max-width:480px;direction:rtl;
+  max-height:90vh;overflow-y:auto;}
+.modal-title{font-size:17px;font-weight:700;color:var(--blue2);margin-bottom:18px;
+  display:flex;align-items:center;gap:8px;border-bottom:1.5px solid var(--border);padding-bottom:12px;}
+.modal-close{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:10px 24px;
+  font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:18px;width:100%;}
+
+/* CHAT */
+.chat-wrap{display:flex;flex-direction:column;height:500px;}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;background:#f8fbff;border-radius:12px;
+  border:1.5px solid var(--border);margin-bottom:14px;}
+.chat-msg{margin-bottom:14px;display:flex;flex-direction:column;}
+.chat-msg.me{align-items:flex-start;}
+.chat-msg.other{align-items:flex-end;}
+.chat-bubble{max-width:70%;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.6;}
+.chat-msg.me .chat-bubble{background:var(--blue);color:#fff;border-radius:12px 12px 0 12px;}
+.chat-msg.other .chat-bubble{background:#fff;color:var(--text);border:1px solid var(--border);border-radius:12px 12px 12px 0;}
+.chat-sender{font-size:11px;color:var(--muted);margin-bottom:3px;}
+.chat-time{font-size:10px;color:var(--muted);margin-top:3px;}
+.chat-input-wrap{display:flex;gap:10px;}
+.chat-input-wrap input{flex:1;border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;
+  font-family:'Cairo',sans-serif;font-size:14px;outline:none;}
+.chat-input-wrap input:focus{border-color:var(--blue);}
+
+/* PREVIEW BON */
+.preview-page{background:#fff;border:1px solid #aaa;margin-bottom:14px;padding:10px;}
+.bon-grid-print{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.bon-print{border:2px solid #111;padding:8px 10px;position:relative;min-height:125px;
+  display:flex;flex-direction:column;gap:3px;overflow:hidden;}
+.bon-wm{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-25deg);
+  font-size:22px;font-weight:900;color:rgba(0,50,140,0.06);white-space:nowrap;pointer-events:none;}
+.bon-top{display:flex;align-items:center;gap:6px;border-bottom:1.5px solid #333;padding-bottom:5px;margin-bottom:4px;}
+.bon-logo-sm{width:44px;height:44px;flex-shrink:0;border-radius:50%;overflow:hidden;}
+.bon-logo-sm img{width:100%;height:100%;object-fit:cover;}
+.bon-co{font-size:7.5px;font-weight:700;color:#003f7f;line-height:1.5;flex:1;}
+.bon-row-p{display:flex;gap:4px;font-size:8px;color:#111;line-height:1.7;}
+.bon-lbl{font-weight:700;white-space:nowrap;min-width:55px;}
+.bon-val{flex:1;}
+.sig-ln{display:inline-block;border-bottom:0.75px solid #555;min-width:65px;}
+.bon-note-p{font-size:6.5px;color:#222;border-top:1px dashed #777;margin-top:3px;padding-top:3px;font-weight:600;text-align:center;}
+.bon-sigs-p{display:flex;justify-content:space-between;font-size:6px;color:#333;border-top:1px solid #888;margin-top:2px;padding-top:2px;}
+.bon-qr{position:absolute;left:4px;bottom:4px;}
+.bon-qr canvas{width:30px!important;height:30px!important;}
 
 /* FOOTER */
-.footer{background:#fff;border-top:1px solid var(--border);padding:10px 20px;text-align:left;font-size:11px;color:var(--muted);direction:ltr;}
+.footer{background:#fff;border-top:2px solid var(--border);padding:12px 24px;
+  text-align:left;font-size:13px;color:var(--blue2);font-weight:700;direction:ltr;letter-spacing:.5px;}
 
-/* HELP MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;display:none;align-items:center;justify-content:center;}
-.modal-box{background:#fff;border-radius:16px;padding:24px;max-width:420px;width:90%;direction:rtl;}
-.modal-title{font-size:15px;font-weight:700;color:var(--blue2);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-.modal-body{font-size:13px;color:#333;line-height:1.8;}
-.modal-close{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 20px;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer;margin-top:16px;display:block;width:100%;}
+/* REPORTS FILTERS */
+.filter-bar{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:18px;margin-bottom:18px;}
+.filter-row{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;}
+.entities-check{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;}
+.entity-cb{display:flex;align-items:center;gap:6px;background:#f5f7fa;border:1px solid var(--border);
+  border-radius:7px;padding:6px 12px;cursor:pointer;font-size:13px;}
+.entity-cb input{accent-color:var(--blue);}
+
+/* USERS */
+.user-card{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:18px;
+  display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.user-avatar-lg{width:48px;height:48px;border-radius:50%;background:var(--light-blue);
+  display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--blue);}
+.user-info{flex:1;}
+.user-name{font-size:15px;font-weight:700;color:var(--blue2);}
+.user-meta{font-size:12px;color:var(--muted);margin-top:2px;}
+.user-actions{display:flex;gap:8px;}
+
+/* PERMISSIONS */
+.perm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.perm-item{display:flex;align-items:center;gap:8px;background:#f5f7fa;border:1px solid var(--border);
+  border-radius:7px;padding:8px 12px;font-size:13px;}
+.perm-item input{accent-color:var(--blue);}
+
+@media print{
+  .topbar,.sidebar,.notif-bar,.footer,.controls-bar,.action-bar,.filter-bar{display:none!important;}
+  .main{padding:0;}
+  .preview-page{border:none;margin:0;page-break-after:always;}
+  .page-label-pr{display:none;}
+}
 </style>
 </head>
 <body>
 
 <!-- SPLASH -->
 <div id="splash">
-  <div class="splash-logo">
-    <img src="assets/logo.jpg" onerror="this.src=''" alt="لوجو">
-  </div>
-  <div class="splash-title">برنامج بونات<br>شركة مياه الشرب والصرف الصحي<br>قطاع جنوب سيناء - منطقة شرم الشيخ</div>
-  <div class="splash-sub">نظام إدارة البونات المائية</div>
-  <div class="splash-bar"><div class="splash-bar-inner"></div></div>
-  <div class="splash-powered">Powered By : Eng.Ahmed Ezz Oshalla</div>
+  <div class="sp-logo"><img src="assets/logo.jpg" alt="لوجو"></div>
+  <div class="sp-title">منظومة إدارة بونات<br>شركة مياه الشرب والصرف الصحي<br>قطاع جنوب سيناء - منطقة شرم الشيخ</div>
+  <div class="sp-sub">منظومة إدارة بونات منطقة شرم الشيخ</div>
+  <div class="sp-bar"><div class="sp-bar-in"></div></div>
+  <div class="sp-pow">Powered By : Eng.Ahmed Ezz Oshalla</div>
 </div>
 
 <!-- LOGIN -->
 <div id="loginPage" style="display:none;min-height:100vh;background:linear-gradient(135deg,#003f7f,#005baa);align-items:center;justify-content:center;flex-direction:column;">
   <div class="login-box">
-    <div class="login-logo"><img src="assets/logo.jpg" onerror="this.style.display='none'" alt="لوجو"></div>
-    <div class="login-title">تسجيل الدخول<br><small style="font-size:11px;color:#888;">بونات مياه شرم الشيخ</small></div>
-    <div class="login-group">
-      <label>اسم المستخدم</label>
-      <input type="text" id="loginUser" placeholder="username">
-    </div>
-    <div class="login-group">
-      <label>كلمة المرور</label>
-      <input type="password" id="loginPass" placeholder="password">
-    </div>
+    <div class="login-logo"><img src="assets/logo.jpg" alt="لوجو"></div>
+    <div class="login-title">تسجيل الدخول</div>
+    <div class="login-subtitle">منظومة إدارة بونات منطقة شرم الشيخ</div>
+    <div class="form-group"><label>اسم المستخدم</label><input type="text" id="lu" placeholder="username"></div>
+    <div class="form-group"><label>كلمة المرور</label><input type="password" id="lp" placeholder="password"></div>
+    <div class="remember"><input type="checkbox" id="rem"> <label for="rem">تذكرني</label></div>
     <button class="login-btn" onclick="doLogin()">دخول</button>
-    <div class="login-err" id="loginErr">اسم المستخدم أو كلمة المرور غلط</div>
+    <div class="login-err" id="loginErr"></div>
     <div class="login-forgot" onclick="showForgot()">نسيت كلمة المرور؟</div>
   </div>
-  <div class="login-powered">Powered By : Eng.Ahmed Ezz Oshalla</div>
+  <div class="login-pow">Powered By : Eng.Ahmed Ezz Oshalla</div>
 </div>
 
-<!-- FORGOT PASSWORD -->
+<!-- FORGOT -->
 <div id="forgotPage" style="display:none;min-height:100vh;background:linear-gradient(135deg,#003f7f,#005baa);align-items:center;justify-content:center;flex-direction:column;">
   <div class="login-box">
     <div class="login-title">استعادة كلمة المرور</div>
-    <div class="login-group">
-      <label>رقم الموبايل</label>
-      <input type="text" id="forgotPhone" placeholder="01xxxxxxxxx">
-    </div>
-    <div class="login-group">
-      <label>البريد الإلكتروني</label>
-      <input type="email" id="forgotEmail" placeholder="example@email.com">
-    </div>
+    <div class="login-subtitle">أدخل رقم موبايلك وإيميلك</div>
+    <div class="form-group"><label>رقم الموبايل</label><input type="text" id="fp" placeholder="01xxxxxxxxx"></div>
+    <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="fe" placeholder="example@gmail.com"></div>
     <button class="login-btn" onclick="doForgot()">إرسال كلمة مرور جديدة</button>
     <div class="login-err" id="forgotErr"></div>
     <div class="login-forgot" onclick="showLogin()">← رجوع لتسجيل الدخول</div>
   </div>
-  <div class="login-powered">Powered By : Eng.Ahmed Ezz Oshalla</div>
+  <div class="login-pow">Powered By : Eng.Ahmed Ezz Oshalla</div>
 </div>
 
 <!-- APP -->
 <div id="appPage" style="display:none;flex-direction:column;min-height:100vh;">
-
-  <!-- TOPBAR -->
   <div class="topbar">
-    <div class="topbar-right">
-      <img class="topbar-logo" src="assets/logo.jpg" onerror="this.style.display='none'" alt="لوجو">
-      <span class="topbar-appname">بونات مياه شرم الشيخ</span>
+    <div class="tb-right">
+      <img class="tb-logo" src="assets/logo.jpg" alt="لوجو">
+      <span class="tb-name">منظومة بونات شرم الشيخ</span>
     </div>
-    <div class="topbar-left">
-      <span class="topbar-welcome">مرحباً،</span>
-      <span class="topbar-username" id="topbarName"></span>
-      <button class="notif-btn" onclick="toggleNotif()" title="الإشعارات">
-        🔔<span class="notif-dot" id="notifDot"></span>
-      </button>
-      <button class="logout-btn" onclick="doLogout()">خروج</button>
-      <div class="topbar-avatar" id="topbarAvatar"></div>
+    <div class="tb-left">
+      <span class="tb-welcome">مرحباً،</span>
+      <span class="tb-user" id="tbName"></span>
+      <div class="notif-wrap">
+        <button class="notif-ico" onclick="toggleNotif()">🔔</button>
+        <span class="notif-dot" id="notifDot"></span>
+      </div>
+      <button class="tb-btn" onclick="doLogout()">خروج</button>
+      <div class="tb-avatar" id="tbAvatar"></div>
     </div>
   </div>
 
-  <!-- NOTIFICATION BAR -->
   <div class="notif-bar" id="notifBar">
-    <span id="notifText"></span>
+    <span id="notifTxt"></span>
     <button onclick="closeNotif()">✕</button>
   </div>
 
-  <!-- BODY -->
   <div class="app-body">
-
-    <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
-      <div class="sidebar-item active" onclick="showSection('home')" id="nav-home">
-        <span class="sidebar-icon">🏠</span> الرئيسية
-      </div>
-      <div class="sidebar-item" onclick="showSection('bons')" id="nav-bons">
-        <span class="sidebar-icon">📋</span> البونات
-      </div>
-      <div class="sidebar-item" onclick="showSection('reports')" id="nav-reports">
-        <span class="sidebar-icon">📊</span> التقارير
-      </div>
-      <div class="sidebar-item" onclick="showSection('requests')" id="nav-requests">
-        <span class="sidebar-icon">📨</span> طلبات الكمية
-      </div>
-      <div class="sidebar-item" onclick="showSection('chat')" id="nav-chat">
-        <span class="sidebar-icon">💬</span> المحادثة
-      </div>
-      <div class="sidebar-sep"></div>
-      <div class="sidebar-item" onclick="showSection('users')" id="nav-users">
-        <span class="sidebar-icon">👥</span> المستخدمين
-      </div>
-      <div class="sidebar-item" onclick="showSection('adduser')" id="nav-adduser">
-        <span class="sidebar-icon">➕</span> إضافة مستخدم
-      </div>
-      <div class="sidebar-item" onclick="showSection('logs')" id="nav-logs">
-        <span class="sidebar-icon">📜</span> السجلات
-      </div>
+      <div class="nav-item active" onclick="goTo('home')" id="nav-home"><span class="nav-icon">🏠</span>الرئيسية</div>
+      <div class="nav-sep"></div>
+      <div class="nav-section">البونات</div>
+      <div class="nav-item" onclick="goTo('bons')" id="nav-bons"><span class="nav-icon">📋</span>إنشاء بون</div>
+      <div class="nav-item" onclick="goTo('preview')" id="nav-preview"><span class="nav-icon">👁️</span>معاينة وطباعة</div>
+      <div class="nav-sep"></div>
+      <div class="nav-section">الإدارة</div>
+      <div class="nav-item" onclick="goTo('reports')" id="nav-reports"><span class="nav-icon">📊</span>التقارير</div>
+      <div class="nav-item" onclick="goTo('requests')" id="nav-requests"><span class="nav-icon">📨</span>طلبات الكمية</div>
+      <div class="nav-item" onclick="goTo('chat')" id="nav-chat"><span class="nav-icon">💬</span>المحادثة</div>
+      <div class="nav-sep"></div>
+      <div class="nav-section">المستخدمين</div>
+      <div class="nav-item" onclick="goTo('users')" id="nav-users"><span class="nav-icon">👥</span>المستخدمين</div>
+      <div class="nav-item" onclick="goTo('adduser')" id="nav-adduser"><span class="nav-icon">➕</span>إضافة مستخدم</div>
+      <div class="nav-sep"></div>
+      <div class="nav-item" onclick="goTo('logs')" id="nav-logs"><span class="nav-icon">📜</span>السجلات</div>
     </div>
 
-    <!-- MAIN -->
-    <div class="main-content" id="mainContent">
+    <div class="main" id="mainArea">
 
       <!-- HOME -->
       <div id="sec-home">
@@ -238,25 +337,25 @@ body{font-family:'Cairo',sans-serif;direction:rtl;background:#f0f4f8;min-height:
           <button class="help-btn" onclick="showHelp('home')">❓ مساعدة</button>
         </div>
         <div class="home-cards">
-          <div class="home-card" onclick="showSection('bons')">
-            <div class="home-card-icon" style="background:#e6f1fb;">📋</div>
-            <div class="home-card-label">البونات</div>
-            <div class="home-card-desc">إنشاء وطباعة بونات المياه</div>
+          <div class="home-card" onclick="goTo('bons')">
+            <div class="hc-icon" style="background:#e6f1fb;">📋</div>
+            <div class="hc-label">البونات</div>
+            <div class="hc-desc">إنشاء وطباعة بونات المياه</div>
           </div>
-          <div class="home-card" onclick="showSection('reports')">
-            <div class="home-card-icon" style="background:#e1f5ee;">📊</div>
-            <div class="home-card-label">التقارير</div>
-            <div class="home-card-desc">عرض وتصدير التقارير</div>
+          <div class="home-card" onclick="goTo('reports')">
+            <div class="hc-icon" style="background:#e1f5ee;">📊</div>
+            <div class="hc-label">التقارير</div>
+            <div class="hc-desc">عرض وتصدير التقارير</div>
           </div>
-          <div class="home-card" onclick="showSection('requests')">
-            <div class="home-card-icon" style="background:#fff3e0;">📨</div>
-            <div class="home-card-label">طلبات الكمية</div>
-            <div class="home-card-desc">طلب والموافقة على الكميات</div>
+          <div class="home-card" onclick="goTo('requests')">
+            <div class="hc-icon" style="background:#fff3e0;">📨</div>
+            <div class="hc-label">طلبات الكمية</div>
+            <div class="hc-desc">طلب والموافقة على الكميات</div>
           </div>
-          <div class="home-card" onclick="showSection('chat')">
-            <div class="home-card-icon" style="background:#f3e5f5;">💬</div>
-            <div class="home-card-label">المحادثة</div>
-            <div class="home-card-desc">التواصل مع المستخدمين</div>
+          <div class="home-card" onclick="goTo('chat')">
+            <div class="hc-icon" style="background:#f3e5f5;">💬</div>
+            <div class="hc-label">المحادثة</div>
+            <div class="hc-desc">التواصل مع المستخدمين</div>
           </div>
         </div>
       </div>
@@ -267,7 +366,122 @@ body{font-family:'Cairo',sans-serif;direction:rtl;background:#f0f4f8;min-height:
           <div class="page-title">إنشاء بون جديد</div>
           <button class="help-btn" onclick="showHelp('bons')">❓ مساعدة</button>
         </div>
-        <p style="color:#888;font-size:13px;">قريباً - شاشة إنشاء البون</p>
+        <div class="form-card">
+          <div class="form-grid">
+            <div class="fg">
+              <label>نوع المياه</label>
+              <div class="radio-group">
+                <div class="radio-card selected" id="rt-tah" onclick="setWaterType('تحلية')">💧 مياه تحلية</div>
+                <div class="radio-card" id="rt-mua" onclick="setWaterType('معالجة')">🌊 مياه معالجة</div>
+              </div>
+            </div>
+            <div class="fg">
+              <label>مسلسل البون</label>
+              <input type="text" id="bonSerial" readonly style="background:#f5f7fa;font-size:22px;font-weight:900;color:var(--blue2);text-align:center;">
+            </div>
+            <div class="fg">
+              <label>التاريخ</label>
+              <input type="text" id="bonDate" readonly style="background:#f5f7fa;">
+            </div>
+            <div class="fg full">
+              <label>الجهة</label>
+              <div style="display:flex;gap:8px;">
+                <select id="bonEntity" style="flex:1;" onchange="checkEntityOther()">
+                  <option value="">-- اختر الجهة --</option>
+                </select>
+                <select id="bonTransport" style="width:140px;">
+                  <option value="بدون نقل">بدون نقل</option>
+                  <option value="شامل النقل">شامل النقل</option>
+                </select>
+              </div>
+              <input type="text" id="bonEntityOther" placeholder="اكتب اسم الجهة الجديدة..." style="display:none;margin-top:8px;">
+            </div>
+            <div class="fg full">
+              <label>الكمية</label>
+              <div class="mode-tabs">
+                <button class="mode-tab active" id="mt-auto" onclick="setQtyMode('auto')">أوتوماتيك</button>
+                <button class="mode-tab" id="mt-manual" onclick="setQtyMode('manual')">يدوي</button>
+              </div>
+              <div id="auto-sec">
+                <input type="number" id="totalQty" placeholder="أدخل الكمية الإجمالية بالمتر المكعب" oninput="calcAuto()">
+                <div class="auto-result" id="autoResult"></div>
+              </div>
+              <div id="manual-sec" style="display:none;">
+                <div id="manualRows">
+                  <div class="manual-row">
+                    <span>حجم البون</span>
+                    <input type="number" placeholder="م³" oninput="calcManual()">
+                    <span>×</span>
+                    <input type="number" placeholder="عدد" oninput="calcManual()">
+                    <span>بون</span>
+                  </div>
+                </div>
+                <button class="add-row-btn" onclick="addManualRow()">+ إضافة سطر</button>
+                <div class="total-box" id="manualTotal">الإجمالي: 0 م³</div>
+              </div>
+            </div>
+            <div class="fg full">
+              <label>الملاحظات</label>
+              <select id="bonNotes" onchange="checkNotesOther()">
+                <option value="">-- اختر ملاحظة --</option>
+                <option>لا يعتد بالبون إلا بختم المنطقة - حصة يناير 2026</option>
+                <option>لا يعتد بالبون إلا بختم المنطقة - حصة فبراير 2026</option>
+                <option>لا يعتد بالبون إلا بختم المنطقة - حصة مارس 2026</option>
+                <option>لا يعتد بالبون إلا بختم المنطقة - حصة أبريل 2026</option>
+                <option>لا يعتد بالبون إلا بختم المنطقة - حصة مايو 2026</option>
+                <option>لا يعتد بالبون إلا بختم المنطقة - حصة يونيو 2026</option>
+                <option value="other">أخرى</option>
+              </select>
+              <input type="text" id="bonNotesOther" placeholder="اكتب الملاحظة..." style="display:none;margin-top:8px;">
+            </div>
+            <div class="fg full">
+              <label>معلومات البون الإضافية</label>
+              <div class="form-grid">
+                <div class="fg">
+                  <label style="font-size:12px;color:var(--muted);">مين طلب؟</label>
+                  <select id="bonRequester">
+                    <option value="">-- اختر --</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label style="font-size:12px;color:var(--muted);">مين وافق؟</label>
+                  <select id="bonApprover">
+                    <option value="">-- اختر --</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label style="font-size:12px;color:var(--muted);">مين طبع؟</label>
+                  <input type="text" id="bonPrinter" readonly style="background:#f5f7fa;">
+                </div>
+                <div class="fg">
+                  <label style="font-size:12px;color:var(--muted);">مين سلّم للعميل؟</label>
+                  <select id="bonDelivery" onchange="checkDeliveryOther()">
+                    <option value="">-- اختر --</option>
+                  </select>
+                  <input type="text" id="bonDeliveryOther" placeholder="اسم المسلّم..." style="display:none;margin-top:6px;">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="action-bar">
+            <button class="btn btn-outline" onclick="resetBonForm()">مسح</button>
+            <button class="btn btn-success" onclick="saveBon()">💾 حفظ</button>
+            <button class="btn btn-primary" onclick="goPreview()">👁️ معاينة وطباعة</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div id="sec-preview" style="display:none;">
+        <div class="page-header">
+          <div class="page-title">معاينة البون قبل الطباعة</div>
+          <div style="display:flex;gap:10px;">
+            <button class="help-btn" onclick="showHelp('preview')">❓ مساعدة</button>
+            <button class="btn btn-outline btn-sm" onclick="goTo('bons')">← تعديل</button>
+            <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ طباعة</button>
+          </div>
+        </div>
+        <div id="previewContent"></div>
       </div>
 
       <!-- REPORTS -->
@@ -276,7 +490,37 @@ body{font-family:'Cairo',sans-serif;direction:rtl;background:#f0f4f8;min-height:
           <div class="page-title">التقارير</div>
           <button class="help-btn" onclick="showHelp('reports')">❓ مساعدة</button>
         </div>
-        <p style="color:#888;font-size:13px;">قريباً - شاشة التقارير</p>
+        <div class="filter-bar">
+          <div class="filter-row">
+            <div class="fg"><label>من تاريخ</label><input type="date" id="repFrom"></div>
+            <div class="fg"><label>إلى تاريخ</label><input type="date" id="repTo"></div>
+            <div class="fg"><label>نوع المياه</label>
+              <select id="repType">
+                <option value="all">الكل</option>
+                <option value="تحلية">مياه تحلية</option>
+                <option value="معالجة">مياه معالجة</option>
+              </select>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="loadReports()" style="margin-top:22px;">بحث</button>
+          </div>
+          <div style="margin-top:12px;">
+            <label style="font-size:14px;font-weight:700;color:#333;">الجهات:</label>
+            <div class="entities-check" id="entitiesCheck"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:14px;">
+          <button class="btn btn-success btn-sm" onclick="exportExcel()">📥 تصدير Excel</button>
+          <button class="btn btn-danger btn-sm" onclick="exportPDF()">📄 تصدير PDF</button>
+        </div>
+        <div class="table-wrap">
+          <table id="reportsTable">
+            <thead><tr>
+              <th>مسلسل</th><th>التاريخ</th><th>النوع</th><th>الكمية</th>
+              <th>الجهة</th><th>النقل</th><th>طبع بواسطة</th><th>الإجراءات</th>
+            </tr></thead>
+            <tbody id="reportsTbody"></tbody>
+          </table>
+        </div>
       </div>
 
       <!-- REQUESTS -->
@@ -285,7 +529,15 @@ body{font-family:'Cairo',sans-serif;direction:rtl;background:#f0f4f8;min-height:
           <div class="page-title">طلبات الكمية</div>
           <button class="help-btn" onclick="showHelp('requests')">❓ مساعدة</button>
         </div>
-        <p style="color:#888;font-size:13px;">قريباً - شاشة الطلبات</p>
+        <div style="display:flex;gap:10px;margin-bottom:18px;" id="reqBtns">
+          <button class="btn btn-primary" onclick="showReqModal()">+ طلب كمية جديد</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>الطالب</th><th>الجهة</th><th>الكمية</th><th>الحالة</th><th>التاريخ</th><th>ملف</th><th>إجراء</th></tr></thead>
+            <tbody id="reqTbody"></tbody>
+          </table>
+        </div>
       </div>
 
       <!-- CHAT -->
@@ -294,7 +546,13 @@ body{font-family:'Cairo',sans-serif;direction:rtl;background:#f0f4f8;min-height:
           <div class="page-title">المحادثة</div>
           <button class="help-btn" onclick="showHelp('chat')">❓ مساعدة</button>
         </div>
-        <p style="color:#888;font-size:13px;">قريباً - شاشة المحادثة</p>
+        <div class="chat-wrap">
+          <div class="chat-msgs" id="chatMsgs"></div>
+          <div class="chat-input-wrap">
+            <input type="text" id="chatInput" placeholder="اكتب رسالة..." onkeydown="if(event.key==='Enter')sendChat()">
+            <button class="btn btn-primary" onclick="sendChat()">إرسال</button>
+          </div>
+        </div>
       </div>
 
       <!-- USERS -->
@@ -303,16 +561,51 @@ body{font-family:'Cairo',sans-serif;direction:rtl;background:#f0f4f8;min-height:
           <div class="page-title">المستخدمين</div>
           <button class="help-btn" onclick="showHelp('users')">❓ مساعدة</button>
         </div>
-        <p style="color:#888;font-size:13px;">قريباً - قائمة المستخدمين</p>
+        <div id="usersList"></div>
       </div>
 
       <!-- ADD USER -->
       <div id="sec-adduser" style="display:none;">
         <div class="page-header">
-          <div class="page-title">إضافة مستخدم</div>
+          <div class="page-title">إضافة مستخدم جديد</div>
           <button class="help-btn" onclick="showHelp('adduser')">❓ مساعدة</button>
         </div>
-        <p style="color:#888;font-size:13px;">قريباً - إضافة مستخدم جديد</p>
+        <div class="form-card">
+          <div class="form-grid">
+            <div class="fg"><label>اسم المستخدم</label><input type="text" id="nu_user" placeholder="username"></div>
+            <div class="fg"><label>كلمة المرور</label><input type="password" id="nu_pass" placeholder="password"></div>
+            <div class="fg"><label>الاسم الفعلي</label><input type="text" id="nu_name" placeholder="الاسم بالكامل"></div>
+            <div class="fg"><label>رقم الموبايل</label><input type="text" id="nu_phone" placeholder="01xxxxxxxxx"></div>
+            <div class="fg full"><label>البريد الإلكتروني</label><input type="email" id="nu_email" placeholder="example@gmail.com"></div>
+            <div class="fg full">
+              <label>نوع الحساب</label>
+              <select id="nu_role" onchange="updatePermsUI()">
+                <option value="viewer">Viewer - مشاهدة فقط</option>
+                <option value="subadmin">Subadmin</option>
+                <option value="admin">Admin</option>
+                <option value="superadmin">Superadmin</option>
+              </select>
+            </div>
+            <div class="fg full">
+              <label>الصلاحيات</label>
+              <div class="perm-grid" id="permsGrid">
+                <div class="perm-item"><input type="checkbox" id="p_add_bons"><label for="p_add_bons">إضافة بونات</label></div>
+                <div class="perm-item"><input type="checkbox" id="p_print_bons"><label for="p_print_bons">طباعة بونات</label></div>
+                <div class="perm-item"><input type="checkbox" id="p_view_reports"><label for="p_view_reports">مشاهدة تقارير</label></div>
+                <div class="perm-item"><input type="checkbox" id="p_print_reports"><label for="p_print_reports">طباعة تقارير</label></div>
+                <div class="perm-item"><input type="checkbox" id="p_add_entity"><label for="p_add_entity">إضافة جهات</label></div>
+                <div class="perm-item"><input type="checkbox" id="p_del_entity"><label for="p_del_entity">حذف من القوائم</label></div>
+                <div class="perm-item"><input type="checkbox" id="p_request_qty"><label for="p_request_qty">طلب كمية</label></div>
+                <div class="perm-item"><input type="checkbox" id="p_approve_qty"><label for="p_approve_qty">الموافقة على الكمية</label></div>
+                <div class="perm-item"><input type="checkbox" id="p_manage_users"><label for="p_manage_users">إدارة المستخدمين</label></div>
+              </div>
+            </div>
+          </div>
+          <div class="action-bar">
+            <button class="btn btn-primary" onclick="addUser()">➕ إضافة المستخدم</button>
+          </div>
+          <div class="login-err" id="addUserErr" style="margin-top:10px;"></div>
+        </div>
       </div>
 
       <!-- LOGS -->
@@ -321,203 +614,584 @@ body{font-family:'Cairo',sans-serif;direction:rtl;background:#f0f4f8;min-height:
           <div class="page-title">السجلات</div>
           <button class="help-btn" onclick="showHelp('logs')">❓ مساعدة</button>
         </div>
-        <p style="color:#888;font-size:13px;">قريباً - سجل العمليات</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>المستخدم</th><th>العملية</th><th>التفاصيل</th><th>التوقيت</th></tr></thead>
+            <tbody id="logsTbody"></tbody>
+          </table>
+        </div>
       </div>
 
     </div>
   </div>
-
   <div class="footer">Powered By : Eng.Ahmed Ezz Oshalla</div>
 </div>
 
-<!-- HELP MODAL -->
-<div class="modal-overlay" id="helpModal" onclick="closeHelp()">
+<!-- MODALS -->
+<div class="modal-ov" id="helpModal" onclick="closeModal('helpModal')">
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="modal-title">❓ <span id="helpTitle"></span></div>
-    <div class="modal-body" id="helpBody"></div>
-    <button class="modal-close" onclick="closeHelp()">حسناً</button>
+    <div class="modal-body" id="helpBody" style="font-size:14px;line-height:1.9;color:#333;"></div>
+    <button class="modal-close" onclick="closeModal('helpModal')">حسناً</button>
+  </div>
+</div>
+
+<div class="modal-ov" id="reqModal" onclick="closeModal('reqModal')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-title">📨 طلب كمية جديد</div>
+    <div class="fg" style="margin-bottom:12px;"><label>الجهة</label><select id="req_entity" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:9px;font-family:'Cairo',sans-serif;font-size:14px;"></select></div>
+    <div class="fg" style="margin-bottom:12px;"><label>الكمية (م³)</label><input type="number" id="req_qty" placeholder="أدخل الكمية" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:9px;font-family:'Cairo',sans-serif;font-size:14px;"></div>
+    <div class="fg" style="margin-bottom:12px;"><label>رفع ملف (صورة أو PDF)</label><input type="file" id="req_file" accept="image/*,.pdf" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:9px;"></div>
+    <button class="modal-close" onclick="submitRequest()" style="background:var(--green);">إرسال الطلب</button>
+    <button class="modal-close" onclick="closeModal('reqModal')" style="background:#888;margin-top:8px;">إلغاء</button>
   </div>
 </div>
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyjWw6QQQiJ6x-luPYPToJtGnpgHwrZop98JkcK11W0ZUQglwd2A3_Qs6-SPZZEX_dI/exec';
-
-let currentUser = null;
+let CU = null;
+let bonData = null;
+let waterType = 'تحلية';
+let qtyMode = 'auto';
+let entities = [];
+let users = [];
 
 const HELP = {
-  home: {title:'الصفحة الرئيسية', body:'هذه الصفحة الرئيسية للبرنامج. يمكنك من هنا الوصول لجميع أقسام البرنامج: البونات، التقارير، طلبات الكمية، والمحادثة.'},
-  bons: {title:'البونات', body:'من هنا يمكنك إنشاء بونات مياه جديدة وطباعتها. أدخل الكمية واختر الجهة ونوع النقل ثم اضغط معاينة وطباعة.'},
-  reports: {title:'التقارير', body:'من هنا يمكنك عرض تقارير البونات. يمكن الفلترة بالتاريخ أو الجهة أو الكل.'},
-  requests: {title:'طلبات الكمية', body:'من هنا يمكنك تقديم طلب كمية مياه أو الموافقة على الطلبات المقدمة حسب صلاحياتك.'},
-  chat: {title:'المحادثة', body:'من هنا يمكن لجميع المستخدمين التواصل مع بعض في محادثة جماعية.'},
-  users: {title:'المستخدمين', body:'من هنا يمكنك عرض قائمة المستخدمين وبياناتهم.'},
-  adduser: {title:'إضافة مستخدم', body:'من هنا يمكنك إضافة مستخدم جديد وتحديد اسمه وصلاحياته.'},
-  logs: {title:'السجلات', body:'من هنا يمكنك عرض كل العمليات التي تمت في البرنامج مع التوقيت واسم المستخدم.'}
+  home:{title:'الرئيسية',body:'الصفحة الرئيسية تتيح الوصول السريع لجميع أقسام المنظومة. اختر القسم المطلوب من الكروت أو من القائمة الجانبية.'},
+  bons:{title:'إنشاء بون',body:'من هنا تنشئ بونات مياه جديدة. اختر نوع المياه (تحلية أو معالجة) ثم أدخل الكمية واختر الجهة. اضغط حفظ أولاً ثم معاينة وطباعة.'},
+  preview:{title:'معاينة وطباعة',body:'تعرض معاينة البونات قبل الطباعة. يمكنك مراجعة البيانات ثم الضغط على طباعة.'},
+  reports:{title:'التقارير',body:'من هنا يمكن عرض تقارير البونات وفلترتها بالتاريخ والجهة ونوع المياه. يمكن التصدير لـ Excel أو PDF.'},
+  requests:{title:'طلبات الكمية',body:'من هنا يمكن تقديم طلب كمية مياه أو الموافقة على الطلبات المقدمة حسب الصلاحيات.'},
+  chat:{title:'المحادثة',body:'محادثة جماعية لجميع مستخدمي المنظومة. اكتب رسالتك واضغط إرسال أو Enter.'},
+  users:{title:'المستخدمين',body:'قائمة بجميع مستخدمي المنظومة مع بياناتهم وصلاحياتهم.'},
+  adduser:{title:'إضافة مستخدم',body:'من هنا يمكن إضافة مستخدم جديد وتحديد نوع حسابه وصلاحياته.'},
+  logs:{title:'السجلات',body:'سجل كامل بجميع العمليات التي تمت في المنظومة مع التوقيت واسم المستخدم.'}
 };
 
 // SPLASH
-window.onload = function() {
-  setTimeout(() => {
-    document.getElementById('splash').style.opacity = '0';
-    setTimeout(() => {
-      document.getElementById('splash').style.display = 'none';
-      showLogin();
-    }, 500);
-  }, 2800);
+window.onload = function(){
+  loadSaved();
+  setTimeout(()=>{
+    document.getElementById('splash').style.opacity='0';
+    setTimeout(()=>{document.getElementById('splash').style.display='none'; showLogin();},600);
+  },3000);
 };
 
-function showLogin() {
-  hide('forgotPage');
+function loadSaved(){
+  const saved = localStorage.getItem('bon_user');
+  if(saved){ CU = JSON.parse(saved); startApp(); }
+}
+
+function showLogin(){
+  hide('forgotPage'); hide('appPage');
   const lp = document.getElementById('loginPage');
-  lp.style.display = 'flex';
+  lp.style.display='flex';
+  const rem = localStorage.getItem('bon_remember');
+  if(rem){ const r=JSON.parse(rem); document.getElementById('lu').value=r.u; document.getElementById('lp').value=r.p; document.getElementById('rem').checked=true; }
 }
 
-function showForgot() {
-  hide('loginPage');
-  const fp = document.getElementById('forgotPage');
-  fp.style.display = 'flex';
-}
+function showForgot(){ hide('loginPage'); document.getElementById('forgotPage').style.display='flex'; }
 
-async function doLogin() {
-  const username = document.getElementById('loginUser').value.trim();
-  const password = document.getElementById('loginPass').value.trim();
-  if (!username || !password) return;
-
-  try {
-    const res = await fetch(API, {
-      method:'POST',
-      body: JSON.stringify({action:'login', username, password})
-    });
-    const data = await res.json();
-    if (data.success) {
-      currentUser = data.user;
+async function doLogin(){
+  const u=val('lu'), p=val('lp');
+  if(!u||!p) return showErr('loginErr','أدخل اسم المستخدم وكلمة المرور');
+  showErr('loginErr','جاري التحقق...','#e6f1fb','var(--blue)');
+  try{
+    const r = await api({action:'login',username:u,password:p});
+    if(r.success){
+      CU = r.user;
+      if(document.getElementById('rem').checked) localStorage.setItem('bon_remember',JSON.stringify({u,p}));
+      else localStorage.removeItem('bon_remember');
+      localStorage.setItem('bon_user', JSON.stringify(CU));
       startApp();
     } else {
-      const err = document.getElementById('loginErr');
-      err.style.display = 'block';
-      err.textContent = data.msg === 'banned' ? 'هذا الحساب محظور' : 'اسم المستخدم أو كلمة المرور غلط';
+      showErr('loginErr', r.msg==='banned'?'هذا الحساب محظور':'اسم المستخدم أو كلمة المرور غلط');
     }
-  } catch(e) {
-    alert('خطأ في الاتصال، تأكد من الإنترنت');
-  }
+  } catch(e){ showErr('loginErr','خطأ في الاتصال'); }
 }
 
-async function doForgot() {
-  const phone = document.getElementById('forgotPhone').value.trim();
-  const email = document.getElementById('forgotEmail').value.trim();
-  const err = document.getElementById('forgotErr');
-  if (!phone || !email) { err.style.display='block'; err.textContent='أدخل رقم الموبايل والإيميل'; return; }
-
-  try {
-    const res = await fetch(API, {
-      method:'POST',
-      body: JSON.stringify({action:'resetPassword', phone, email})
-    });
-    const data = await res.json();
-    err.style.display = 'block';
-    if (data.success) {
-      err.style.background = '#d4edda';
-      err.style.color = '#155724';
-      err.textContent = 'تم إرسال كلمة مرور جديدة على إيميلك';
-    } else {
-      err.textContent = 'لم يتم العثور على حساب بهذه البيانات';
-    }
-  } catch(e) { err.style.display='block'; err.textContent='خطأ في الاتصال'; }
+async function doForgot(){
+  const p=val('fp'), e=val('fe');
+  if(!p||!e) return showErr('forgotErr','أدخل رقم الموبايل والإيميل');
+  try{
+    const r = await api({action:'resetPassword',phone:p,email:e});
+    if(r.success){ showErr('forgotErr','تم إرسال كلمة مرور جديدة على إيميلك ✓','#d4edda','#155724'); }
+    else showErr('forgotErr','لم يتم العثور على حساب بهذه البيانات');
+  } catch(e){ showErr('forgotErr','خطأ في الاتصال'); }
 }
 
-function startApp() {
-  hide('loginPage');
-  hide('forgotPage');
-  const app = document.getElementById('appPage');
-  app.style.display = 'flex';
-
-  // Welcome
-  const initials = currentUser.fullname ? currentUser.fullname.split(' ').map(w=>w[0]).join('').substring(0,2) : currentUser.username.substring(0,2);
-  document.getElementById('topbarName').textContent = currentUser.fullname || currentUser.username;
-  document.getElementById('topbarAvatar').textContent = initials;
-
-  // Notification
-  showNotifBar(`مرحباً ${currentUser.fullname || currentUser.username} — دخلت الساعة ${new Date().toLocaleTimeString('ar-EG')}`);
-
-  // Sidebar permissions
+function startApp(){
+  hide('loginPage'); hide('forgotPage');
+  document.getElementById('appPage').style.display='flex';
+  const init=(CU.fullname||CU.username).substring(0,2);
+  document.getElementById('tbName').textContent = CU.fullname||CU.username;
+  document.getElementById('tbAvatar').textContent = init;
+  showNotif(`مرحباً ${CU.fullname||CU.username} — دخلت الساعة ${new Date().toLocaleTimeString('ar-EG')}`);
   setupSidebar();
-
-  // Log
-  callAPI({action:'addLog', user:currentUser.username, action_:'login', details:'تسجيل دخول'});
+  loadEntities();
+  loadUsers();
+  setDate();
+  setSerial();
+  document.getElementById('bonPrinter').value = CU.fullname||CU.username;
+  apiCall({action:'addLog',user:CU.username,action:'login',details:'تسجيل دخول'});
 }
 
-function setupSidebar() {
-  const role = currentUser.role;
-  const perms = (currentUser.permissions || '').split(',');
-
-  // hide adduser for non-admin/superadmin
-  if (!['admin','superadmin'].includes(role)) {
-    document.getElementById('nav-adduser').style.display = 'none';
-  }
-  if (!['admin','superadmin'].includes(role)) {
-    document.getElementById('nav-logs').style.display = 'none';
-  }
-  if (!perms.includes('view_reports') && !['admin','superadmin'].includes(role)) {
-    document.getElementById('nav-reports').style.display = 'none';
-  }
-  if (!perms.includes('add_bons') && !['admin','superadmin'].includes(role)) {
-    document.getElementById('nav-bons').style.display = 'none';
-  }
-  if (!perms.includes('request_qty') && !['admin','superadmin'].includes(role)) {
-    document.getElementById('nav-requests').style.display = 'none';
-  }
+function setupSidebar(){
+  const r=CU.role, p=(CU.permissions||'').split(',');
+  const hide_nav=(id)=>{ const el=document.getElementById(id); if(el) el.style.display='none'; };
+  if(!hasPerm('add_bons')) hide_nav('nav-bons');
+  if(!hasPerm('add_bons')) hide_nav('nav-preview');
+  if(!hasPerm('view_reports')) hide_nav('nav-reports');
+  if(!['admin','superadmin'].includes(r)){ hide_nav('nav-users'); hide_nav('nav-adduser'); hide_nav('nav-logs'); }
 }
 
-function showNotifBar(msg) {
-  const bar = document.getElementById('notifBar');
-  document.getElementById('notifText').textContent = msg;
-  bar.style.display = 'flex';
+function hasPerm(p){
+  if(['admin','superadmin'].includes(CU.role)) return true;
+  return (CU.permissions||'').includes(p);
 }
 
-function closeNotif() { document.getElementById('notifBar').style.display = 'none'; }
-function toggleNotif() {
-  const bar = document.getElementById('notifBar');
-  bar.style.display = bar.style.display === 'none' ? 'flex' : 'none';
-}
-
-function doLogout() {
-  callAPI({action:'addLog', user:currentUser.username, action_:'logout', details:'تسجيل خروج'});
-  currentUser = null;
-  document.getElementById('appPage').style.display = 'none';
+function doLogout(){
+  apiCall({action:'addLog',user:CU.username,action:'logout',details:'تسجيل خروج'});
+  localStorage.removeItem('bon_user');
+  CU=null;
+  hide('appPage');
   showLogin();
 }
 
-function showSection(name) {
-  const secs = ['home','bons','reports','requests','chat','users','adduser','logs'];
-  secs.forEach(s => { document.getElementById('sec-'+s).style.display = s===name?'block':'none'; });
-  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
-  const nav = document.getElementById('nav-'+name);
-  if (nav) nav.classList.add('active');
+// NAVIGATION
+function goTo(sec){
+  const secs=['home','bons','preview','reports','requests','chat','users','adduser','logs'];
+  secs.forEach(s=>{ const el=document.getElementById('sec-'+s); if(el) el.style.display=s===sec?'block':'none'; });
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  const nav=document.getElementById('nav-'+sec); if(nav) nav.classList.add('active');
+  if(sec==='reports') loadReports();
+  if(sec==='requests') loadRequests();
+  if(sec==='chat') loadChat();
+  if(sec==='users') loadUsers();
+  if(sec==='logs') loadLogs();
 }
 
-function showHelp(page) {
-  const h = HELP[page] || {title:'مساعدة', body:'لا توجد معلومات لهذه الصفحة.'};
-  document.getElementById('helpTitle').textContent = h.title;
-  document.getElementById('helpBody').textContent = h.body;
-  document.getElementById('helpModal').style.display = 'flex';
-}
-function closeHelp() { document.getElementById('helpModal').style.display = 'none'; }
-
-function hide(id) { document.getElementById(id).style.display = 'none'; }
-
-async function callAPI(data) {
-  try {
-    await fetch(API, {method:'POST', body: JSON.stringify(data)});
-  } catch(e) {}
+// BONS
+function setWaterType(t){
+  waterType=t;
+  document.getElementById('rt-tah').className='radio-card'+(t==='تحلية'?' selected':'');
+  document.getElementById('rt-mua').className='radio-card'+(t==='معالجة'?' selected':'');
+  setSerial();
 }
 
-// Enter key login
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    if (document.getElementById('loginPage').style.display !== 'none') doLogin();
-    if (document.getElementById('forgotPage').style.display !== 'none') doForgot();
+function setDate(){
+  const d=new Date();
+  document.getElementById('bonDate').value=d.getFullYear()+'/'+(String(d.getMonth()+1).padStart(2,'0'))+'/'+String(d.getDate()).padStart(2,'0');
+}
+
+async function setSerial(){
+  const key='serial_'+waterType;
+  const saved = parseInt(localStorage.getItem(key)||'0')+1;
+  document.getElementById('bonSerial').value = (waterType==='تحلية'?'T':'M')+'-'+String(saved).padStart(4,'0');
+}
+
+function setQtyMode(m){
+  qtyMode=m;
+  document.getElementById('mt-auto').className='mode-tab'+(m==='auto'?' active':'');
+  document.getElementById('mt-manual').className='mode-tab'+(m==='manual'?' active':'');
+  document.getElementById('auto-sec').style.display=m==='auto'?'block':'none';
+  document.getElementById('manual-sec').style.display=m==='manual'?'block':'none';
+}
+
+function calcAuto(){
+  const total=parseInt(document.getElementById('totalQty').value)||0;
+  const res=document.getElementById('autoResult');
+  if(total<=0){res.style.display='none';return;}
+  const fp=Math.floor(total/1000), rem=total%1000, lv=rem>0?rem/10:0, tp=fp+(rem>0?1:0);
+  res.style.display='block';
+  res.innerHTML=
+    (fp>0?`${fp} صفحة كاملة (${fp*10} بون × 100م³ = ${fp*1000} م³)<br>`:'') +
+    (rem>0?`آخر صفحة: 10 بونات × ${lv} م³ = ${rem} م³<br>`:'') +
+    `<strong>الإجمالي: ${total} م³ | الصفحات: ${tp} | البونات: ${tp*10}</strong>`;
+}
+
+function addManualRow(){
+  const d=document.createElement('div'); d.className='manual-row';
+  d.innerHTML='<span>حجم البون</span><input type="number" placeholder="م³" oninput="calcManual()"><span>×</span><input type="number" placeholder="عدد" oninput="calcManual()"><span>بون</span>';
+  document.getElementById('manualRows').appendChild(d);
+}
+
+function calcManual(){
+  let total=0;
+  document.querySelectorAll('#manualRows .manual-row').forEach(r=>{
+    const ins=r.querySelectorAll('input');
+    total+=(parseFloat(ins[0].value)||0)*(parseFloat(ins[1].value)||0);
+  });
+  document.getElementById('manualTotal').textContent='الإجمالي: '+total+' م³';
+}
+
+function checkEntityOther(){
+  const sel=document.getElementById('bonEntity');
+  const isOther=sel.value==='other';
+  document.getElementById('bonEntityOther').style.display=isOther?'block':'none';
+}
+
+function checkNotesOther(){
+  const sel=document.getElementById('bonNotes');
+  document.getElementById('bonNotesOther').style.display=sel.value==='other'?'block':'none';
+}
+
+function checkDeliveryOther(){
+  const sel=document.getElementById('bonDelivery');
+  document.getElementById('bonDeliveryOther').style.display=sel.value==='other'?'block':'none';
+}
+
+async function loadEntities(){
+  try{
+    const r=await api({action:'getEntities'});
+    if(r.success){
+      entities=r.entities;
+      const sel=document.getElementById('bonEntity');
+      const rsel=document.getElementById('req_entity');
+      const defaultOpts=['قسم شرطة أول شرم الشيخ','إدارة الرصد الأمني بالرويسات','إدارة تأمين المناطق السياحية','إدارة مرور جنوب سيناء','المركز الطبي بالرويسات','الشركة المصرية لنقل الكهرباء','إدارة سيناء لتدريب كلاب الأمن'];
+      const allEntities=[...defaultOpts,...r.entities.map(e=>e.name)];
+      sel.innerHTML='<option value="">-- اختر الجهة --</option>';
+      rsel.innerHTML='<option value="">-- اختر الجهة --</option>';
+      allEntities.forEach(e=>{
+        sel.innerHTML+=`<option value="${e}">${e}</option>`;
+        rsel.innerHTML+=`<option value="${e}">${e}</option>`;
+      });
+      if(hasPerm('add_entity')) sel.innerHTML+=`<option value="other">+ إضافة جهة جديدة</option>`;
+      loadEntitiesCheck(allEntities);
+    }
+  }catch(e){}
+}
+
+function loadEntitiesCheck(ents){
+  const wrap=document.getElementById('entitiesCheck');
+  if(!wrap) return;
+  wrap.innerHTML='<div class="entity-cb"><input type="checkbox" id="ec-all" checked onchange="toggleAllEntities(this)"><label for="ec-all">الكل</label></div>';
+  ents.forEach((e,i)=>{
+    wrap.innerHTML+=`<div class="entity-cb"><input type="checkbox" id="ec-${i}" value="${e}" checked><label for="ec-${i}">${e}</label></div>`;
+  });
+}
+
+function toggleAllEntities(cb){
+  document.querySelectorAll('#entitiesCheck input[type=checkbox]').forEach(c=>c.checked=cb.checked);
+}
+
+async function loadUsers(){
+  try{
+    const r=await api({action:'getUsers'});
+    if(r.success){
+      users=r.users;
+      const reqSel=document.getElementById('bonRequester');
+      const appSel=document.getElementById('bonApprover');
+      const delSel=document.getElementById('bonDelivery');
+      reqSel.innerHTML='<option value="">-- اختر --</option>';
+      appSel.innerHTML='<option value="">-- اختر --</option>';
+      delSel.innerHTML='<option value="">-- اختر --</option>';
+      users.forEach(u=>{
+        const opt=`<option value="${u.username}">${u.fullname||u.username}</option>`;
+        reqSel.innerHTML+=opt; appSel.innerHTML+=opt; delSel.innerHTML+=opt;
+      });
+      delSel.innerHTML+='<option value="other">أخرى</option>';
+      renderUsers();
+    }
+  }catch(e){}
+}
+
+function renderUsers(){
+  const wrap=document.getElementById('usersList');
+  if(!wrap) return;
+  wrap.innerHTML='';
+  users.forEach(u=>{
+    const init=(u.fullname||u.username).substring(0,2);
+    const roleBadge={'superadmin':'badge-red','admin':'badge-blue','subadmin':'badge-orange','viewer':'badge-green'};
+    wrap.innerHTML+=`
+    <div class="user-card">
+      <div class="user-avatar-lg">${init}</div>
+      <div class="user-info">
+        <div class="user-name">${u.fullname||u.username}</div>
+        <div class="user-meta">📱 ${u.phone||'-'} &nbsp;|&nbsp; ✉️ ${u.email||'-'}</div>
+        <div class="user-meta" style="margin-top:4px;">
+          <span class="badge ${roleBadge[u.role]||'badge-green'}">${u.role}</span>
+          &nbsp; الحالة: <span class="badge ${u.status==='active'?'badge-green':'badge-red'}">${u.status==='active'?'نشط':'محظور'}</span>
+        </div>
+      </div>
+      <div class="user-actions">
+        ${['superadmin'].includes(CU.role)?`<button class="btn btn-danger btn-sm" onclick="deleteUser('${u.username}')">حذف</button>`:''}
+        ${['superadmin','admin'].includes(CU.role)?`<button class="btn btn-outline btn-sm" onclick="toggleBan('${u.username}','${u.status}')">
+          ${u.status==='active'?'حظر':'رفع حظر'}</button>`:''}
+      </div>
+    </div>`;
+  });
+}
+
+async function addUser(){
+  const u=val('nu_user'), p=val('nu_pass'), n=val('nu_name'), ph=val('nu_phone'), e=val('nu_email'), r=val('nu_role');
+  if(!u||!p||!n) return showErr('addUserErr','اسم المستخدم وكلمة المرور والاسم مطلوبين');
+  const perms=[];
+  ['add_bons','print_bons','view_reports','print_reports','add_entity','del_entity','request_qty','approve_qty','manage_users']
+    .forEach(p=>{ if(document.getElementById('p_'+p)?.checked) perms.push(p); });
+  try{
+    const res=await api({action:'addUser',username:u,password:p,fullname:n,phone:ph,email:e,role:r,permissions:perms.join(','),by:CU.username});
+    if(res.success){ showErr('addUserErr','تم إضافة المستخدم بنجاح ✓','#d4edda','#155724'); loadUsers(); }
+    else showErr('addUserErr','خطأ: '+res.msg);
+  }catch(e){ showErr('addUserErr','خطأ في الاتصال'); }
+}
+
+function updatePermsUI(){
+  const role=val('nu_role');
+  const allPerms=['add_bons','print_bons','view_reports','print_reports','add_entity','del_entity','request_qty','approve_qty','manage_users'];
+  if(['admin','superadmin'].includes(role)){ allPerms.forEach(p=>{ const el=document.getElementById('p_'+p); if(el){el.checked=true;el.disabled=true;} }); }
+  else { allPerms.forEach(p=>{ const el=document.getElementById('p_'+p); if(el){el.checked=false;el.disabled=false;} }); }
+}
+
+async function deleteUser(username){
+  if(!confirm('هل أنت متأكد من حذف المستخدم '+username+'؟')) return;
+  await api({action:'deleteUser',username,by:CU.username});
+  loadUsers();
+}
+
+async function toggleBan(username, status){
+  const newStatus = status==='active'?'banned':'active';
+  await api({action:'updateUser',username,status:newStatus,by:CU.username});
+  loadUsers();
+}
+
+// BON SAVE & PREVIEW
+async function saveBon(){
+  const entity = val('bonEntity')==='other' ? val('bonEntityOther') : val('bonEntity');
+  const notes = val('bonNotes')==='other' ? val('bonNotesOther') : val('bonNotes');
+  if(!entity) return alert('اختر الجهة أولاً');
+  let qty=0, qtyText='';
+  if(qtyMode==='auto'){
+    qty=parseInt(val('totalQty'))||0;
+    qtyText=qty+' متر مكعب';
+  } else {
+    qty=parseInt(document.getElementById('manualTotal').textContent.replace(/[^0-9]/g,''))||0;
+    qtyText=qty+' متر مكعب';
   }
-});
+  if(qty<=0) return alert('أدخل الكمية أولاً');
+  if(val('bonEntity')==='other' && val('bonEntityOther') && hasPerm('add_entity')){
+    await api({action:'addEntity',name:val('bonEntityOther'),added_by:CU.username});
+    loadEntities();
+  }
+  const serial=document.getElementById('bonSerial').value;
+  bonData={
+    serial, date:val('bonDate'), quantity:qty, quantity_text:qtyText,
+    entity, transport:val('bonTransport'), notes, water_type:waterType,
+    printed_by:CU.username, requester:val('bonRequester'),
+    approver:val('bonApprover'), delivery:val('bonDelivery')==='other'?val('bonDeliveryOther'):val('bonDelivery')
+  };
+  try{
+    const r=await api({action:'addBon',...bonData});
+    if(r.success){
+      const key='serial_'+waterType;
+      localStorage.setItem(key, String(parseInt(localStorage.getItem(key)||'0')+1));
+      alert('تم حفظ البون بنجاح ✓');
+    }
+  }catch(e){ alert('خطأ في الحفظ'); }
+}
+
+function goPreview(){
+  if(!bonData) return alert('احفظ البون أولاً');
+  goTo('preview');
+  renderPreview();
+}
+
+function renderPreview(){
+  const wrap=document.getElementById('previewContent');
+  if(!bonData){wrap.innerHTML='<p style="color:#888;">لا توجد بيانات بون. ارجع لإنشاء بون أولاً.</p>';return;}
+  const total=bonData.quantity, fp=Math.floor(total/1000), rem=total%1000, lv=rem>0?rem/10:0, tp=fp+(rem>0?1:0);
+  let html='';
+  let serial=1;
+  for(let p=0;p<tp;p++){
+    const isLast=p===tp-1&&rem>0, bv=isLast?lv:100;
+    const bvS=isLast?bv+' م³':'100 م³';
+    const bvF=isLast?bv+' متر مكعب (مياه '+bonData.water_type+')':'مائة متر مكعب (مياه '+bonData.water_type+')';
+    html+=`<div class="page-label-pr" style="font-size:11px;color:#555;text-align:center;margin-bottom:6px;">صفحة ${p+1} من ${tp}${isLast?' — آخر صفحة':''}</div>`;
+    html+=`<div class="preview-page"><div class="bon-grid-print">`;
+    for(let b=0;b<10;b++){
+      const qrId='qr-'+p+'-'+b;
+      html+=`<div class="bon-print">
+        <div class="bon-wm">مياه شرم الشيخ</div>
+        <div class="bon-top">
+          <div class="bon-logo-sm"><img src="assets/logo.jpg" alt="لوجو"></div>
+          <div class="bon-co">شركة مياه الشرب والصرف الصحي<br>بشمال وجنوب سيناء<br>قطاع الجنوب منطقة شرم الشيخ</div>
+        </div>
+        <div class="bon-row-p"><span class="bon-lbl">مسلسل البون</span><span class="bon-val">${bonData.serial}-${serial}</span>
+          <span class="bon-lbl" style="margin-right:6px;">التاريخ</span><span class="bon-val">${bonData.date}</span></div>
+        <div class="bon-row-p"><span class="bon-lbl">الكمية</span><span class="bon-val">${bvS} ${bvF}</span></div>
+        <div class="bon-row-p"><span class="bon-lbl">الجهة</span><span class="bon-val">${bonData.entity} (${bonData.transport})</span></div>
+        <div class="bon-row-p"><span class="bon-lbl">المختص</span><span class="bon-val"><span class="sig-ln"></span></span>
+          <span class="bon-lbl" style="margin-right:6px;">مدير المنطقة</span><span class="bon-val"><span class="sig-ln"></span></span></div>
+        <div class="bon-note-p">${bonData.notes||'لا يعتد بالبون إلا بختم المنطقة'}</div>
+        <div class="bon-sigs-p"><span>م. أحمد عز</span><span>م. منصور محمد</span><span>أ/ إبراهيم سرحان</span></div>
+        <div class="bon-qr" id="${qrId}"></div>
+      </div>`;
+      serial++;
+    }
+    html+=`</div></div>`;
+  }
+  wrap.innerHTML=html;
+  let s2=1;
+  for(let p=0;p<tp;p++) for(let b=0;b<10;b++){
+    try{
+      new QRCode(document.getElementById('qr-'+p+'-'+b),{
+        text:`طلب:${bonData.requester||'-'}|وافق:${bonData.approver||'-'}|طبع:${bonData.printed_by}|سلّم:${bonData.delivery||'-'}|مسلسل:${bonData.serial}-${s2}`,
+        width:30,height:30
+      });
+    }catch(e){}
+    s2++;
+  }
+}
+
+// REPORTS
+async function loadReports(){
+  try{
+    const from=val('repFrom'), to=val('repTo'), type=val('repType');
+    const checkedEntities=[...document.querySelectorAll('#entitiesCheck input[type=checkbox]:checked:not(#ec-all)')].map(c=>c.value);
+    const r=await api({action:'getBons',from,to,entity:'all'});
+    if(r.success){
+      let bons=r.bons;
+      if(type!=='all') bons=bons.filter(b=>b.water_type===type);
+      if(checkedEntities.length>0) bons=bons.filter(b=>checkedEntities.includes(b.entity));
+      const tbody=document.getElementById('reportsTbody');
+      tbody.innerHTML='';
+      bons.forEach(b=>{
+        const canDel=['superadmin'].includes(CU.role);
+        tbody.innerHTML+=`<tr>
+          <td>${b.serial}</td><td>${b.date}</td>
+          <td><span class="badge ${b.water_type==='تحلية'?'badge-blue':'badge-green'}">${b.water_type||'-'}</span></td>
+          <td>${b.quantity} م³</td><td>${b.entity}</td><td>${b.transport}</td><td>${b.printed_by}</td>
+          <td>${canDel?`<button class="btn btn-danger btn-sm" onclick="deleteBon('${b.id}')">حذف</button>`:'-'}</td>
+        </tr>`;
+      });
+    }
+  }catch(e){}
+}
+
+async function deleteBon(id){
+  if(!confirm('هل أنت متأكد من حذف هذا البون؟')) return;
+  await api({action:'deleteBon',id,by:CU.username});
+  loadReports();
+}
+
+function exportExcel(){
+  const table=document.getElementById('reportsTable');
+  const wb=XLSX.utils.table_to_book(table);
+  XLSX.writeFile(wb,'تقرير_البونات.xlsx');
+}
+
+function exportPDF(){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF('l','mm','a4');
+  doc.text('تقرير البونات - منظومة شرم الشيخ',20,20);
+  doc.save('تقرير_البونات.pdf');
+}
+
+// REQUESTS
+async function loadRequests(){
+  try{
+    const r=await api({action:'getRequests',requester:hasPerm('approve_qty')?null:CU.username});
+    if(r.success){
+      const tbody=document.getElementById('reqTbody');
+      tbody.innerHTML='';
+      r.requests.forEach(req=>{
+        const canApprove=hasPerm('approve_qty')&&req.status==='pending';
+        tbody.innerHTML+=`<tr>
+          <td>${req.requester}</td><td>${req.entity}</td><td>${req.quantity} م³</td>
+          <td><span class="badge ${req.status==='pending'?'badge-orange':req.status==='approved'?'badge-green':'badge-red'}">
+            ${req.status==='pending'?'قيد الانتظار':req.status==='approved'?'موافق':'مرفوض'}</span></td>
+          <td>${req.created_at}</td>
+          <td>${req.file_url?`<a href="${req.file_url}" target="_blank">عرض</a>`:'-'}</td>
+          <td>${canApprove?`<button class="btn btn-success btn-sm" onclick="approveReq('${req.id}','approved')">موافقة</button>
+            <button class="btn btn-danger btn-sm" onclick="approveReq('${req.id}','rejected')">رفض</button>`:'-'}</td>
+        </tr>`;
+      });
+    }
+  }catch(e){}
+}
+
+function showReqModal(){ document.getElementById('reqModal').style.display='flex'; }
+
+async function submitRequest(){
+  const entity=val('req_entity'), qty=val('req_qty');
+  if(!entity||!qty) return alert('اختر الجهة وأدخل الكمية');
+  await api({action:'addRequest',requester:CU.username,entity,quantity:qty,file_url:''});
+  closeModal('reqModal');
+  loadRequests();
+  alert('تم إرسال الطلب بنجاح ✓');
+}
+
+async function approveReq(id, status){
+  await api({action:'approveRequest',id,status,by:CU.username});
+  loadRequests();
+}
+
+// CHAT
+let chatInterval=null;
+async function loadChat(){
+  try{
+    const r=await api({action:'getChat'});
+    if(r.success){
+      const wrap=document.getElementById('chatMsgs');
+      wrap.innerHTML='';
+      r.messages.forEach(m=>{
+        const isMe=m.sender===CU.username;
+        wrap.innerHTML+=`<div class="chat-msg ${isMe?'me':'other'}">
+          <div class="chat-sender">${isMe?'أنت':m.sender}</div>
+          <div class="chat-bubble">${m.message}</div>
+          <div class="chat-time">${m.created_at}</div>
+        </div>`;
+      });
+      wrap.scrollTop=wrap.scrollHeight;
+    }
+  }catch(e){}
+  if(!chatInterval) chatInterval=setInterval(loadChat,10000);
+}
+
+async function sendChat(){
+  const msg=val('chatInput');
+  if(!msg.trim()) return;
+  document.getElementById('chatInput').value='';
+  await api({action:'addChat',sender:CU.username,message:msg});
+  loadChat();
+}
+
+// LOGS
+async function loadLogs(){
+  try{
+    const r=await api({action:'getLogs'});
+    if(r.success){
+      const tbody=document.getElementById('logsTbody');
+      tbody.innerHTML='';
+      [...r.logs].reverse().forEach(l=>{
+        tbody.innerHTML+=`<tr><td>${l.user}</td><td>${l.action}</td><td>${l.details}</td><td>${l.created_at}</td></tr>`;
+      });
+    }
+  }catch(e){}
+}
+
+// HELPERS
+function showNotif(msg){
+  document.getElementById('notifTxt').textContent=msg;
+  document.getElementById('notifBar').style.display='flex';
+  document.getElementById('notifDot').style.display='block';
+}
+function closeNotif(){ document.getElementById('notifBar').style.display='none'; }
+function toggleNotif(){ const b=document.getElementById('notifBar'); b.style.display=b.style.display==='none'?'flex':'none'; }
+function showHelp(pg){ const h=HELP[pg]||{title:'مساعدة',body:'لا توجد معلومات.'}; document.getElementById('helpTitle').textContent=h.title; document.getElementById('helpBody').textContent=h.body; document.getElementById('helpModal').style.display='flex'; }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+function hide(id){ const el=document.getElementById(id); if(el) el.style.display='none'; }
+function val(id){ const el=document.getElementById(id); return el?el.value:''; }
+function showErr(id,msg,bg='#fee2e2',color='#c00'){ const el=document.getElementById(id); if(el){el.style.display='block';el.style.background=bg;el.style.color=color;el.textContent=msg;} }
+function resetBonForm(){ document.getElementById('totalQty').value=''; document.getElementById('autoResult').style.display='none'; document.getElementById('bonEntity').value=''; document.getElementById('bonNotes').value=''; document.getElementById('bonEntityOther').style.display='none'; document.getElementById('bonNotesOther').style.display='none'; setWaterType('تحلية'); setSerial(); }
+
+async function api(data){
+  const r=await fetch(API,{method:'POST',body:JSON.stringify(data)});
+  return await r.json();
+}
+async function apiCall(data){ try{ await fetch(API,{method:'POST',body:JSON.stringify(data)}); }catch(e){} }
+
+document.addEventListener('keydown',e=>{ if(e.key==='Enter'){ if(document.getElementById('loginPage').style.display!=='none') doLogin(); if(document.getElementById('forgotPage').style.display!=='none') doForgot(); } });
 </script>
 </body>
 </html>
