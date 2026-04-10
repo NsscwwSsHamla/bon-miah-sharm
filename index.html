@@ -1010,7 +1010,7 @@ async function doLogin(){
       localStorage.setItem('bon_user', JSON.stringify(CU));
       startApp();
     } else {
-      showErr('loginErr', r.msg==='banned'?'هذا الحساب محظور':'اسم المستخدم أو كلمة المرور غلط');
+      showErr('loginErr', r.msg==='banned'?'هذا الحساب محظور':'اسم المستخدم أو كلمة المرور خاطئة');
     }
   } catch(e){ showErr('loginErr','خطأ في الاتصال'); }
 }
