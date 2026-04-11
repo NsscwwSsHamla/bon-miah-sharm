@@ -217,27 +217,26 @@ tr:hover td{background:#f8fbff;}
 .mention-avatar{width:26px;height:26px;border-radius:50%;background:var(--light-blue);
   display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--blue);flex-shrink:0;}
 
-/* PREVIEW BON - IMPROVED */
-.preview-page{background:#fff;border:1px solid #aaa;margin-bottom:14px;padding:10px;}
+/* PREVIEW BON - A4 OPTIMIZED */
+.preview-page{background:#fff;border:1px solid #aaa;margin-bottom:14px;padding:8px;}
 .bon-grid-print{display:grid;grid-template-columns:1fr 1fr;gap:0;}
-.bon-print{border:2px solid #222;padding:10px 12px;position:relative;min-height:140px;
-  display:flex;flex-direction:column;gap:4px;overflow:hidden;}
+.bon-print{border:1.5px solid #222;padding:9px 11px;position:relative;min-height:135px;
+  display:flex;flex-direction:column;gap:3px;overflow:hidden;}
 .bon-wm{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-25deg);
-  font-size:24px;font-weight:900;color:rgba(0,50,140,0.06);white-space:nowrap;pointer-events:none;}
-.bon-top{display:flex;align-items:center;gap:8px;border-bottom:2px solid #333;padding-bottom:6px;margin-bottom:5px;}
-.bon-logo-sm{width:48px;height:48px;flex-shrink:0;border-radius:50%;overflow:hidden;}
+  font-size:26px;font-weight:900;color:rgba(0,50,140,0.06);white-space:nowrap;pointer-events:none;}
+.bon-top{display:flex;align-items:center;gap:8px;border-bottom:2px solid #222;padding-bottom:5px;margin-bottom:4px;}
+.bon-logo-sm{width:52px;height:52px;flex-shrink:0;border-radius:50%;overflow:hidden;border:1.5px solid #004a99;}
 .bon-logo-sm img{width:100%;height:100%;object-fit:cover;}
-.bon-co{font-size:8.5px;font-weight:700;color:#003f7f;line-height:1.5;flex:1;}
-.bon-row-p{display:flex;gap:4px;font-size:9px;color:#111;line-height:1.8;}
-.bon-lbl{font-weight:700;white-space:nowrap;min-width:60px;}
+.bon-co{font-size:9.5px;font-weight:900;color:#003f7f;line-height:1.6;flex:1;}
+.bon-row-p{display:flex;gap:4px;font-size:10px;color:#111;line-height:1.9;}
+.bon-lbl{font-weight:700;white-space:nowrap;min-width:65px;}
 .bon-val{flex:1;}
-.sig-ln{display:inline-block;border-bottom:1px solid #555;min-width:70px;}
-.bon-note-p{font-size:7.5px;color:#222;border-top:1.5px dashed #777;margin-top:4px;padding-top:4px;font-weight:600;text-align:center;}
-.bon-sigs-p{display:flex;justify-content:space-between;font-size:7px;color:#333;border-top:1.5px solid #888;margin-top:3px;padding-top:3px;}
-.bon-code{font-size:7px;color:#555;text-align:center;font-family:monospace;letter-spacing:1px;margin-top:2px;direction:ltr;}
+.sig-ln{display:inline-block;border-bottom:1px solid #444;min-width:75px;}
+.bon-note-p{font-size:8.5px;color:#111;border-top:1.5px dashed #666;margin-top:4px;padding-top:4px;font-weight:700;text-align:center;}
+.bon-code{font-size:7.5px;color:#444;text-align:center;font-family:monospace;letter-spacing:2px;margin-top:3px;direction:ltr;font-weight:700;}
 .bon-qr{position:absolute;left:4px;bottom:4px;}
 .bon-qr canvas{width:32px!important;height:32px!important;}
-.bon-separator{border:none;border-top:2px dashed #999;margin:0;}
+.bon-separator{display:none;}
 
 /* ENTITIES PAGE */
 .entity-type-badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:600;}
@@ -304,16 +303,16 @@ tr:hover td{background:#f8fbff;}
   display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
 .loading-overlay.show{display:flex;}
 
-/* PRINT STYLES */
+/* PRINT STYLES - A4 */
 @media print{
   .topbar,.sidebar,.notif-bar,.footer,.controls-bar,.action-bar,.filter-bar,
-  .page-header,.tab-bar,.btn,.help-btn{display:none!important;}
+  .page-header,.tab-bar,.btn,.help-btn,.loading-overlay{display:none!important;}
   .main{padding:0!important;margin:0!important;}
   .app-body{display:block!important;}
-  .preview-page{border:none!important;margin:0!important;padding:5mm!important;page-break-after:always;}
-  .bon-grid-print{gap:0!important;}
-  .bon-print{border:1.5px solid #000!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .bon-separator{border-top:1.5px dashed #666!important;}
+  @page{size:A4;margin:5mm;}
+  .preview-page{border:none!important;margin:0!important;padding:2mm!important;page-break-after:always;break-after:page;}
+  .bon-grid-print{gap:0!important;height:280mm;}
+  .bon-print{border:1px solid #000!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;height:25%;}
   .page-label-pr{display:none!important;}
   body{background:#fff!important;}
 }
@@ -337,7 +336,7 @@ tr:hover td{background:#f8fbff;}
 
 <!-- SPLASH -->
 <div id="splash">
-  <div class="sp-logo"><img src="assets/logo.jpg" alt="لوجو" onerror="this.style.display='none'"></div>
+  <div class="sp-logo"><img src="assets/logo.jpg" alt="لوجو" onerror="this.parentElement.innerHTML='<div style=\'color:rgba(255,255,255,0.5);font-size:12px;\'>مياه شرم الشيخ</div>'" id="splashLogo"></div>
   <div class="sp-title">منظومة إدارة بونات<br>شركة مياه الشرب والصرف الصحي<br>قطاع جنوب سيناء - منطقة شرم الشيخ</div>
   <div class="sp-sub">منظومة إدارة بونات منطقة شرم الشيخ</div>
   <div class="sp-bar"><div class="sp-bar-in"></div></div>
@@ -347,7 +346,7 @@ tr:hover td{background:#f8fbff;}
 <!-- LOGIN -->
 <div id="loginPage" style="display:none;min-height:100vh;background:linear-gradient(135deg,#003f7f,#005baa);align-items:center;justify-content:center;flex-direction:column;">
   <div class="login-box">
-    <div class="login-logo"><img src="assets/logo.jpg" alt="لوجو" onerror="this.style.display='none'"></div>
+    <div class="login-logo"><img src="assets/logo.jpg" alt="لوجو" id="loginLogo" onerror="this.style.display='none'"></div>
     <div class="login-title">تسجيل الدخول</div>
     <div class="login-subtitle">منظومة إدارة بونات منطقة شرم الشيخ</div>
     <div class="form-group"><label>اسم المستخدم</label><input type="text" id="lu" placeholder="username"></div>
@@ -390,7 +389,7 @@ tr:hover td{background:#f8fbff;}
 <div id="appPage" style="display:none;flex-direction:column;min-height:100vh;">
   <div class="topbar">
     <div class="tb-right">
-      <img class="tb-logo" src="assets/logo.jpg" alt="لوجو" onerror="this.style.display='none'">
+      <img class="tb-logo" src="assets/logo.jpg" alt="لوجو" id="topbarLogo" onerror="this.style.display='none'">
       <span class="tb-name">منظومة بونات شرم الشيخ</span>
     </div>
     <div class="tb-left">
@@ -923,6 +922,15 @@ const API = 'https://script.google.com/macros/s/AKfycbyjWw6QQQiJ6x-luPYPToJtGnpg
 const SUPERADMIN_USER = 'NazGul.Ezz.Admin';
 const SUPERADMIN_PASS = 'N@zGul+Ezz+Bon@t+31415926542026';
 
+// Logo fix - add timestamp to force reload
+function fixLogos(){
+  const ts = new Date().getTime();
+  document.querySelectorAll('img[src="assets/logo.jpg"]').forEach(img=>{
+    img.src = 'assets/logo.jpg?v='+ts;
+    img.onerror = function(){ this.style.display='none'; };
+  });
+}
+
 let CU = null; // Current User
 let bonData = null;
 let waterType = 'تحلية';
@@ -969,6 +977,7 @@ const HELP = {
 
 // ==================== SPLASH & AUTH ====================
 window.onload = function(){
+  fixLogos();
   loadSaved();
   setTimeout(()=>{
     document.getElementById('splash').style.opacity='0';
@@ -995,13 +1004,23 @@ async function doLogin(){
   const u=val('lu'), p=val('lp');
   if(!u||!p) return showErr('loginErr','أدخل اسم المستخدم وكلمة المرور');
   showErr('loginErr','جاري التحقق...','#e6f1fb','var(--blue)');
+
+  // Superadmin local check (bypass API)
+  if(u===SUPERADMIN_USER && p===SUPERADMIN_PASS){
+    CU = {username:SUPERADMIN_USER,fullname:'NazGul Ezz Admin',role:'superadmin',permissions:'all',status:'active',code:'000'};
+    if(document.getElementById('rem').checked) localStorage.setItem('bon_remember',JSON.stringify({u,p}));
+    else localStorage.removeItem('bon_remember');
+    localStorage.setItem('bon_user', JSON.stringify(CU));
+    startApp();
+    return;
+  }
+
   try{
     const r = await api({action:'login',username:u,password:p});
     if(r.success){
       CU = r.user;
       if(document.getElementById('rem').checked) localStorage.setItem('bon_remember',JSON.stringify({u,p}));
       else localStorage.removeItem('bon_remember');
-      // Check if password is temporary (first login)
       if(CU.temp_password){
         hide('loginPage');
         document.getElementById('changePassPage').style.display='flex';
@@ -1056,6 +1075,7 @@ function startApp(){
   loadNotes();
   document.getElementById('bonPrinter').value = CU.fullname||CU.username;
   apiCall({action:'addLog',user:CU.username,logtype:'security',details:'تسجيل دخول'});
+  setTimeout(fixLogos, 500);
 }
 
 function setupSidebar(){
@@ -1068,7 +1088,7 @@ function setupSidebar(){
   if(!hasPerm('view_activity_logs') && !['admin','superadmin'].includes(r)) hide_nav('nav-logs');
   if(!['admin','superadmin'].includes(r)) hide_nav('nav-security');
   if(r!=='superadmin') hide_nav('nav-deleted');
-  // Show ban all buttons for admin/superadmin
+  if(!hasPerm('request_qty') && !hasPerm('approve_qty') && !['admin','superadmin'].includes(r)) hide_nav('nav-requests');
   if(['admin','superadmin'].includes(r)){
     const ba=document.getElementById('banAllBtn'); if(ba) ba.style.display='inline-flex';
     const ub=document.getElementById('unbanAllBtn'); if(ub) ub.style.display='inline-flex';
@@ -1077,6 +1097,7 @@ function setupSidebar(){
 
 function hasPerm(p){
   if(['admin','superadmin'].includes(CU.role)) return true;
+  if(CU.permissions==='all') return true;
   return (CU.permissions||'').includes(p);
 }
 
@@ -1097,17 +1118,18 @@ function goTo(sec){
   ALL_SECTIONS.forEach(s=>{ const el=document.getElementById('sec-'+s); if(el) el.style.display=s===sec?'block':'none'; });
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
   const nav=document.getElementById('nav-'+sec); if(nav) nav.classList.add('active');
-  if(sec==='reports') loadReports();
+  // Always reload data when navigating
+  if(sec==='reports'){ if(reportInterval){clearInterval(reportInterval);reportInterval=null;} loadReports(); }
   if(sec==='requests') loadRequests();
   if(sec==='chat'){ loadChat(); startChatPolling(); }
-  if(sec==='users') renderUsers();
+  if(sec==='users') loadUsers();
   if(sec==='logs') loadLogs();
   if(sec==='security') loadSecurityLogs();
   if(sec==='deleted') loadDeletedRecords();
-  if(sec==='entities') renderEntities();
+  if(sec==='entities'){ loadEntities().then(()=>renderEntities()); }
   if(sec==='printsaved') setupPrintSaved();
-  // Stop chat polling when leaving chat
   if(sec!=='chat' && chatInterval){ clearInterval(chatInterval); chatInterval=null; }
+  if(sec!=='reports' && reportInterval){ clearInterval(reportInterval); reportInterval=null; }
 }
 
 // ==================== WATER TYPE & SERIAL ====================
@@ -1124,7 +1146,6 @@ function setDate(){
 }
 
 async function setSerial(){
-  // Get next serial from saved bons count (no padding - T-1, T-2, etc.)
   try {
     const r = await api({action:'getBons'});
     if(r.success){
@@ -1139,7 +1160,6 @@ async function setSerial(){
       document.getElementById('bonSerial').value = prefix+'-'+(maxSerial+1);
     }
   } catch(e) {
-    // Fallback to localStorage
     const key='serial_'+waterType;
     const saved = parseInt(localStorage.getItem(key)||'0')+1;
     const prefix = waterType==='تحلية'?'T':'M';
@@ -1396,22 +1416,40 @@ function renderUsers(){
   if(!wrap) return;
   wrap.innerHTML='';
   const isAdmin = ['admin','superadmin'].includes(CU.role);
+  const isSuper = CU.role==='superadmin';
+
   users.forEach(u=>{
-    // Superadmin account hidden from non-admin users
-    if(u.role==='superadmin' && CU.role!=='admin' && CU.role!=='superadmin') return;
+    // Superadmin hidden from non-admin
+    if(u.role==='superadmin' && !isAdmin) return;
     const init=(u.fullname||u.username).substring(0,2);
     const roleBadge={'superadmin':'badge-red','admin':'badge-blue','user':'badge-orange','subadmin':'badge-orange','viewer':'badge-green'};
     const roleLabel = u.role==='subadmin'?'User':u.role;
-    const isSuperadmin = u.role==='superadmin';
+    const isSuperUser = u.role==='superadmin';
 
     let actionsHtml = '';
-    if(isAdmin && !isSuperadmin){
+    if(isAdmin && !isSuperUser){
       actionsHtml += `<button class="btn btn-outline btn-sm" onclick="showEditUser('${u.username}')">✏️ تعديل</button>`;
       actionsHtml += `<button class="btn ${u.status==='active'?'btn-warning':'btn-success'} btn-sm" onclick="toggleBan('${u.username}','${u.status}')">
         ${u.status==='active'?'⛔ حظر':'✅ تفعيل'}</button>`;
     }
-    if(CU.role==='superadmin' && !isSuperadmin){
+    if(isSuper && !isSuperUser){
       actionsHtml += `<button class="btn btn-danger btn-sm" onclick="deleteUser('${u.username}')">🗑️ حذف</button>`;
+    }
+
+    // Non-admin sees limited info
+    if(!isAdmin){
+      wrap.innerHTML+=`
+      <div class="user-card">
+        <div class="user-avatar-lg">${init}</div>
+        <div class="user-info">
+          <div class="user-name">${u.fullname||u.username} ${u.code?`<span class="user-code">${u.code}</span>`:''}</div>
+          <div class="user-meta">📱 ${u.phone||'-'}</div>
+          <div class="user-meta" style="margin-top:4px;">
+            <span class="badge ${roleBadge[u.role]||'badge-green'}">${roleLabel}</span>
+          </div>
+        </div>
+      </div>`;
+      return;
     }
 
     wrap.innerHTML+=`
@@ -1419,7 +1457,7 @@ function renderUsers(){
       <div class="user-avatar-lg">${init}</div>
       <div class="user-info">
         <div class="user-name">${u.fullname||u.username} ${u.code?`<span class="user-code">${u.code}</span>`:''}</div>
-        <div class="user-meta">📱 ${u.phone||'-'} ${isAdmin?`&nbsp;|&nbsp; ✉️ ${u.email||'-'}`:''}</div>
+        <div class="user-meta">📱 ${u.phone||'-'} &nbsp;|&nbsp; ✉️ ${u.email||'-'}</div>
         <div class="user-meta" style="margin-top:4px;">
           <span class="badge ${roleBadge[u.role]||'badge-green'}">${roleLabel}</span>
           &nbsp; <span class="badge ${u.status==='active'?'badge-green':'badge-red'}">${u.status==='active'?'نشط':'محظور'}</span>
@@ -1593,7 +1631,6 @@ function renderPreview(){
     html+=`<div class="preview-page"><div class="bon-grid-print">`;
     for(let b=0;b<10;b++){
       const qrId='qr-'+p+'-'+b;
-      if(b>0 && b%2===0) html+='<hr class="bon-separator" style="grid-column:1/-1;">';
       html+=`<div class="bon-print">
         <div class="bon-wm">مياه شرم الشيخ</div>
         <div class="bon-top">
@@ -1607,8 +1644,7 @@ function renderPreview(){
         <div class="bon-row-p"><span class="bon-lbl">المختص</span><span class="bon-val"><span class="sig-ln"></span></span>
           <span class="bon-lbl" style="margin-right:6px;">مدير المنطقة</span><span class="bon-val"><span class="sig-ln"></span></span></div>
         <div class="bon-note-p">${bonData.notes||'لا يعتد بالبون إلا بختم المنطقة'}</div>
-        <div class="bon-sigs-p"><span>م. أحمد عز</span><span>م. منصور محمد</span><span>أ/ إبراهيم سرحان</span></div>
-        <div class="bon-code">${encodedStr}</div>
+        <div class="bon-code" style="font-size:7px;color:#555;text-align:center;font-family:monospace;letter-spacing:1px;margin-top:2px;direction:ltr;">${encodedStr}</div>
         <div class="bon-qr" id="${qrId}"></div>
       </div>`;
       serial++;
@@ -1712,7 +1748,6 @@ function printSelectedBons(){
       <div class="bon-row-p"><span class="bon-lbl">المختص</span><span class="bon-val"><span class="sig-ln"></span></span>
         <span class="bon-lbl" style="margin-right:6px;">مدير المنطقة</span><span class="bon-val"><span class="sig-ln"></span></span></div>
       <div class="bon-note-p">${b.notes||'لا يعتد بالبون إلا بختم المنطقة'}</div>
-      <div class="bon-sigs-p"><span>م. أحمد عز</span><span>م. منصور محمد</span><span>أ/ إبراهيم سرحان</span></div>
       <div class="bon-code">${encoded}</div>
     </div>`;
   });
@@ -1737,7 +1772,7 @@ async function loadReports(){
       const tbody=document.getElementById('reportsTbody');
       tbody.innerHTML='';
       bons.forEach(b=>{
-        const canDel=hasPerm('delete');
+        const canDel=['admin','superadmin'].includes(CU.role);
         // Progressive status
         let statusHtml = buildStatusFlow(b);
         tbody.innerHTML+=`<tr>
@@ -1805,15 +1840,23 @@ function exportExcel(){
 }
 
 function exportPDF(){
-  const table=document.getElementById('reportsTable');
+  const element = document.getElementById('reportsTable');
   const opt = {
-    margin: 10,
+    margin: [10,5,10,5],
     filename: 'تقرير_البونات.pdf',
     image: {type:'jpeg',quality:0.98},
-    html2canvas: {scale:2,useCORS:true,letterRendering:true},
+    html2canvas: {scale:2,useCORS:true,letterRendering:true,logging:false},
     jsPDF: {unit:'mm',format:'a4',orientation:'landscape'}
   };
-  html2pdf().set(opt).from(table).save();
+  // Clone table and fix for PDF
+  const clone = element.cloneNode(true);
+  clone.style.direction='rtl';
+  clone.style.fontFamily='Arial,sans-serif';
+  const tmpDiv = document.createElement('div');
+  tmpDiv.style.cssText='position:fixed;top:-9999px;direction:rtl;font-family:Arial,sans-serif;font-size:12px;';
+  tmpDiv.appendChild(clone);
+  document.body.appendChild(tmpDiv);
+  html2pdf().set(opt).from(tmpDiv).save().then(()=>document.body.removeChild(tmpDiv));
 }
 
 // ==================== REQUESTS ====================
@@ -1822,13 +1865,12 @@ async function loadRequests(){
     const r=await api({action:'getRequests',requester:hasPerm('approve_qty')?null:CU.username});
     if(r.success){
       let requests = r.requests||[];
-      // Sort: newest first
       requests.sort((a,b)=>(b.created_at||'').localeCompare(a.created_at||''));
       const tbody=document.getElementById('reqTbody');
       tbody.innerHTML='';
       requests.forEach(req=>{
         const canApprove=hasPerm('approve_qty')&&req.status==='pending';
-        const canCreateBon = req.status==='approved';
+        const canCreateBon = (hasPerm('add_bons')||['admin','superadmin'].includes(CU.role)) && req.status==='approved';
         const canPrint = req.status==='created';
 
         let actionHtml = '';
@@ -1838,7 +1880,7 @@ async function loadRequests(){
         } else if(canCreateBon){
           actionHtml = `<button class="btn btn-primary btn-sm" onclick="createBonFromReq('${req.id}','${req.entity}','${req.requester}','${req.approved_by||''}')">📋 إنشاء بون</button>`;
         } else if(canPrint){
-          actionHtml = `<button class="btn btn-purple btn-sm" onclick="window.print()">🖨️ طباعة</button>`;
+          actionHtml = `<button class="btn btn-purple btn-sm" onclick="printReqBon('${req.id}')">🖨️</button>`;
         } else if(req.status==='printed'){
           actionHtml = '<span class="badge badge-green">✓ تم الطباعة</span>';
         } else {
@@ -1857,12 +1899,18 @@ async function loadRequests(){
           <td>${req.approved_by?getDisplayName(req.approved_by):'-'}</td>
           <td>${statusBadge}</td>
           <td>${req.created_at}</td>
-          <td>${req.file_url?`<a href="${req.file_url}" target="_blank">عرض</a>`:'-'}</td>
+          <td>${req.file_url?`<a href="${req.file_url}" target="_blank">📎 عرض</a>`:'-'}</td>
           <td>${actionHtml}</td>
         </tr>`;
       });
     }
   }catch(e){}
+}
+
+function printReqBon(reqId){
+  apiCall({action:'approveRequest',id:reqId,status:'printed',by:CU.username});
+  window.print();
+  loadRequests();
 }
 
 function showReqModal(){ document.getElementById('reqModal').style.display='flex'; }
@@ -1912,7 +1960,7 @@ let chatCache = [];
 
 function startChatPolling(){
   if(chatInterval) clearInterval(chatInterval);
-  chatInterval = setInterval(loadChat, 3000);
+  chatInterval = setInterval(loadChat, 2000);
 }
 
 async function loadChat(){
